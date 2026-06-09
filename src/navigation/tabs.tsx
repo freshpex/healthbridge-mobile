@@ -3,7 +3,7 @@ import { colors } from "../constants/theme";
 import type { Screen } from "../types/domain";
 
 export function Tabs({ current, onChange }: { current: Screen; onChange: (screen: Screen) => void }) {
-  const items: Array<[Screen, string]> = [["patient", "Home"], ["records", "Records"], ["sharing", "Share"], ["emergency", "Emergency"]];
+  const items: Array<[Screen, string]> = [["patient", "Home"], ["records", "Records"], ["sharing", "Share"], ["audit", "Audit"], ["profile", "Profile"], ["emergency", "Emergency"]];
   return (
     <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
       {items.map(([screen, label]) => (

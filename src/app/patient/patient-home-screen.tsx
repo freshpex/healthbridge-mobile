@@ -36,6 +36,8 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { d
       </View>
       <PrimaryButton label="View medical records" onPress={() => setScreen("records")} />
       <PrimaryButton label="Share records" tone="teal" onPress={() => setScreen("sharing")} />
+      <PrimaryButton label="Audit history" tone="light" onPress={() => setScreen("audit")} />
+      <PrimaryButton label="Profile settings" tone="light" onPress={() => setScreen("profile")} />
       <PrimaryButton label="Emergency QR/code" tone="light" onPress={() => setScreen("emergency")} />
       <PrimaryButton label="Refresh data" tone="light" onPress={refresh} />
       <PrimaryButton label="Sign out" tone="light" onPress={logout} />

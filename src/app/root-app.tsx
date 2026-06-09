@@ -8,6 +8,8 @@ import { DoctorScreen } from "./doctor/doctor-screen";
 import { EmergencyScreen } from "./emergency/emergency-screen";
 import { HospitalScreen } from "./hospital/hospital-screen";
 import { PatientHomeScreen } from "./patient/patient-home-screen";
+import { AuditScreen } from "./patient/audit-screen";
+import { ProfileScreen } from "./patient/profile-screen";
 import { RecordsScreen } from "./patient/records-screen";
 import { SharingScreen } from "./patient/sharing-screen";
 import { Tabs } from "../navigation/tabs";
@@ -96,7 +98,7 @@ export function RootApp() {
     setScreen("signin");
   };
 
-  const showPatientTabs = user?.role === "patient" && ["patient", "records", "sharing", "emergency"].includes(screen);
+  const showPatientTabs = user?.role === "patient" && ["patient", "records", "sharing", "emergency", "audit", "profile"].includes(screen);
 
   if (booting) {
     return (
@@ -116,9 +118,11 @@ export function RootApp() {
       {screen === "records" ? <RecordsScreen dashboard={dashboard} /> : null}
       {screen === "sharing" ? <SharingScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
       {screen === "emergency" ? <EmergencyScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
-      {screen === "hospital" ? <HospitalScreen /> : null}
-      {screen === "doctor" ? <DoctorScreen /> : null}
-      {screen === "admin" ? <AdminScreen /> : null}
+      {screen === "audit" ? <AuditScreen dashboard={dashboard} /> : null}
+      {screen === "profile" ? <ProfileScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
+      {screen === "hospital" ? <HospitalScreen token={token} user={user} /> : null}
+      {screen === "doctor" ? <DoctorScreen token={token} user={user} /> : null}
+      {screen === "admin" ? <AdminScreen token={token} /> : null}
       {showPatientTabs ? (
         <View style={{ padding: 12, borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: colors.surface }}>
           <Tabs current={screen} onChange={setScreen} />

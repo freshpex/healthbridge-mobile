@@ -72,8 +72,18 @@ export const healthbridgeApi = {
     };
   },
 
+  hospitalPatients: async (token: string, hospitalId: string) => {
+    const patients = await apiClient.request<RawPatient[]>(`/hospitals/${hospitalId}/patients`, {}, token);
+    return patients.map(normalizePatient);
+  },
+
+  users: (token: string) => apiClient.request<User[]>("/users", {}, token),
+
   revokeShare: (token: string, id: string) =>
     apiClient.request<RawShare>(`/consent-sharing/${id}/revoke`, { method: "PATCH" }, token).then(normalizeShare),
+
+  updateProfile: (token: string, payload: Partial<Pick<PatientProfile, "bloodGroup" | "allergies" | "chronicConditions" | "currentMedications" | "emergencyContact">>) =>
+    apiClient.request<RawPatient>("/patients/me", { method: "PATCH", body: JSON.stringify(payload) }, token).then(normalizePatient),
 
   enableEmergency: (token: string) => apiClient.request<{ code: string }>("/emergency-access/enable", { method: "POST" }, token),
 

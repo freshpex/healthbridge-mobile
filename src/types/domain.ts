@@ -1,5 +1,5 @@
 export type Role = "patient" | "doctor" | "hospital_admin" | "super_admin" | "emergency_staff";
-export type Screen = "onboarding" | "signin" | "patient" | "records" | "sharing" | "emergency" | "hospital" | "doctor" | "admin";
+export type Screen = "onboarding" | "signin" | "patient" | "records" | "sharing" | "emergency" | "audit" | "profile" | "hospital" | "doctor" | "admin";
 
 export interface User {
   id: string;
