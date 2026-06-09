@@ -3,11 +3,12 @@ import { PrimaryButton } from "../../components/buttons/primary-button";
 import { InfoCard } from "../../components/cards/info-card";
 import { ScreenView } from "../../components/layout/screen";
 import type { Screen } from "../../types/domain";
+import onboardingImage from "../../../assets/images/onboarding-healthbridge.png";
 
 export function OnboardingScreen({ setScreen }: { setScreen: (screen: Screen) => void }) {
   return (
     <ScreenView title="HealthBridge" subtitle="Securely access, manage, and share medical records across hospitals.">
-      <Image source={require("../../../assets/images/onboarding-healthbridge.png")} resizeMode="cover" style={{ width: "100%", aspectRatio: 1.58, borderRadius: 18, borderWidth: 1, borderColor: "#DCE8F5" }} />
+      <Image source={onboardingImage} resizeMode="cover" style={{ width: "100%", aspectRatio: 1.58, borderRadius: 18, borderWidth: 1, borderColor: "#DCE8F5" }} />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
         <InfoCard label="Hospital sync" value="Connected" />
         <InfoCard label="Emergency code" value="Ready" tone="amber" />

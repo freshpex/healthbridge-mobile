@@ -82,8 +82,22 @@ export const healthbridgeApi = {
   revokeShare: (token: string, id: string) =>
     apiClient.request<RawShare>(`/consent-sharing/${id}/revoke`, { method: "PATCH" }, token).then(normalizeShare),
 
+  createShare: (token: string, payload: { toHospitalId: string; scopes: string[]; expiresAt?: string }) =>
+    apiClient.request<RawShare>("/consent-sharing", { method: "POST", body: JSON.stringify(payload) }, token).then(normalizeShare),
+
   updateProfile: (token: string, payload: Partial<Pick<PatientProfile, "bloodGroup" | "allergies" | "chronicConditions" | "currentMedications" | "emergencyContact">>) =>
     apiClient.request<RawPatient>("/patients/me", { method: "PATCH", body: JSON.stringify(payload) }, token).then(normalizePatient),
+
+  uploadDocument: (token: string, file: { uri: string; name: string; mimeType?: string }) => {
+    const form = new FormData();
+    form.append("file", {
+      uri: file.uri,
+      name: file.name,
+      type: file.mimeType ?? "application/octet-stream"
+    } as unknown as Blob);
+    form.append("category", "personal_document");
+    return apiClient.request<{ _id: string; fileName: string; provider: string }>("/uploads", { method: "POST", body: form }, token);
+  },
 
   enableEmergency: (token: string) => apiClient.request<{ code: string }>("/emergency-access/enable", { method: "POST" }, token),
 

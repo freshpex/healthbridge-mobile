@@ -116,7 +116,7 @@ export function RootApp() {
       {error ? <Text selectable style={{ color: colors.danger, paddingHorizontal: 18 }}>{error}</Text> : null}
       {screen === "patient" ? <PatientHomeScreen dashboard={dashboard} refresh={loadDashboard} setScreen={setScreen} logout={logout} /> : null}
       {screen === "records" ? <RecordsScreen dashboard={dashboard} /> : null}
-      {screen === "sharing" ? <SharingScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
+      {screen === "sharing" ? <SharingScreen token={token} dashboard={dashboard} hospitals={hospitals} refresh={loadDashboard} /> : null}
       {screen === "emergency" ? <EmergencyScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
       {screen === "audit" ? <AuditScreen dashboard={dashboard} /> : null}
       {screen === "profile" ? <ProfileScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
