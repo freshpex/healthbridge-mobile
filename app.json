@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "healthbridge-mobile",
+    "name": "HealthBridge",
     "slug": "healthbridge-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.healthbridge.mobile"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +18,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.jackiest.healthbridgemobile"
+      "package": "com.healthbridge.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
