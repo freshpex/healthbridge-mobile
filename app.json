@@ -32,6 +32,12 @@
           "backgroundColor": "#F7FBFF"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c13b91ca-59cb-4c64-b50c-ae4a88c0a309"
+      }
+    },
+    "owner": "hackere"
   }
 }
