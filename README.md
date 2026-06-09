@@ -10,7 +10,7 @@ cp .env.example .env
 npm run start
 ```
 
-Start with Expo Go for development. The app uses seeded presentation data and can call the backend with `EXPO_PUBLIC_API_URL`.
+Start with Expo Go for development. The app stores auth tokens with `expo-secure-store` and calls the backend with `EXPO_PUBLIC_API_URL`.
 
 ## Commands
 
@@ -24,6 +24,6 @@ npx expo prebuild --clean
 
 ## Demo
 
-Use the persona buttons on sign-in or seeded credentials with password `Password123!`.
+Use seeded credentials with password `Password123!`.
 
 Emergency code: `HB-DEMO01`.

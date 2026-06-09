@@ -23,8 +23,10 @@ const normalizeHospital = (hospital: RawHospital): Hospital => ({ ...hospital, i
 const normalizePatient = (patient: RawPatient): PatientProfile => ({
   ...patient,
   id: idOf(patient),
-  connectedHospitalIds: (patient.hospitalIds ?? []).map((hospital) => idOf(hospital as RawHospital | string)),
-  hospitalIds: (patient.hospitalIds ?? []).filter((hospital): hospital is RawHospital => typeof hospital !== "string").map(normalizeHospital)
+  connectedHospitalIds: ((patient.hospitalIds ?? []) as Array<RawHospital | string>).map((hospital) => idOf(hospital)),
+  hospitalIds: ((patient.hospitalIds ?? []) as Array<RawHospital | string>)
+    .filter((hospital) => typeof hospital !== "string")
+    .map((hospital) => normalizeHospital(hospital))
 });
 
 const normalizeRecord = (record: RawRecord): RecordItem => ({
