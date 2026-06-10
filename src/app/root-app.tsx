@@ -12,6 +12,9 @@ import { AuditScreen } from "./patient/audit-screen";
 import { ProfileScreen } from "./patient/profile-screen";
 import { RecordsScreen } from "./patient/records-screen";
 import { SharingScreen } from "./patient/sharing-screen";
+import { SymptomsScreen } from "./patient/symptoms-screen";
+import { HospitalFinderScreen } from "./patient/hospital-finder-screen";
+import { EmergencyCardScreen } from "./patient/emergency-card-screen";
 import { Tabs } from "../navigation/tabs";
 import { healthbridgeApi, type AuthSession } from "../services/healthbridge-api";
 import type { Hospital, PatientDashboard, Screen, User } from "../types/domain";
@@ -98,7 +101,7 @@ export function RootApp() {
     setScreen("signin");
   };
 
-  const showPatientTabs = user?.role === "patient" && ["patient", "records", "sharing", "emergency", "audit", "profile"].includes(screen);
+  const showPatientTabs = user?.role === "patient" && ["patient", "records", "sharing", "emergency", "emergency-card", "symptoms", "hospital-finder", "audit", "profile"].includes(screen);
 
   if (booting) {
     return (
@@ -118,6 +121,9 @@ export function RootApp() {
       {screen === "records" ? <RecordsScreen dashboard={dashboard} /> : null}
       {screen === "sharing" ? <SharingScreen token={token} dashboard={dashboard} hospitals={hospitals} refresh={loadDashboard} /> : null}
       {screen === "emergency" ? <EmergencyScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
+      {screen === "emergency-card" ? token && user ? <EmergencyCardScreen token={token} user={user} /> : null : null}
+      {screen === "symptoms" ? token ? <SymptomsScreen token={token} setScreen={setScreen} /> : null : null}
+      {screen === "hospital-finder" ? token ? <HospitalFinderScreen token={token} /> : null : null}
       {screen === "audit" ? <AuditScreen dashboard={dashboard} /> : null}
       {screen === "profile" ? <ProfileScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
       {screen === "hospital" ? <HospitalScreen token={token} user={user} /> : null}
