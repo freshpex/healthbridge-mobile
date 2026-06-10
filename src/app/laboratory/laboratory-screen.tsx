@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from "react-native";
-import { FlaskConical } from "lucide-react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { ScreenView } from "../../components/layout/screen";
 import { PrimaryButton } from "../../components/buttons/primary-button";
 import { colors } from "../../constants/theme";
@@ -25,6 +24,16 @@ export function LaboratoryScreen({
         const items = await healthbridgeApi.hospitals();
         if (!alive) return;
         setHospitals(items.filter((h) => h.status === "approved"));
+        
+        // Load upload count from dashboard
+        try {
+          const dashboard = await healthbridgeApi.patientDashboard(token);
+          if (alive) {
+            setUploadCount(dashboard.uploads.length);
+          }
+        } catch {
+          console.error("Could not load upload count");
+        }
       } catch (caught) {
         if (alive) {
           console.error(caught instanceof Error ? caught.message : "Could not load hospitals");
@@ -37,7 +46,7 @@ export function LaboratoryScreen({
     return () => {
       alive = false;
     };
-  }, []);
+  }, [token]);
 
   return (
     <ScreenView title="Laboratory Portal" subtitle="Upload test results, manage samples, and link patients.">

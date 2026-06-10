@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, Text, TextInput, View, Pressable, ActivityIndicator, FlatList } from "react-native";
+import { ScrollView, Text, TextInput, View, Pressable, ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScreenView } from "../../components/layout/screen";
 import { PrimaryButton } from "../../components/buttons/primary-button";
@@ -37,10 +37,14 @@ export function HospitalFinderScreen({ token }: { token: string }) {
   const loadHospitals = async () => {
     setLoading(true);
     try {
-      const response = await healthbridgeApi.request("/hospitals", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setHospitals(response);
+      const response = await healthbridgeApi.hospitals();
+      setHospitals(response.map((h) => ({
+        id: h.id,
+        name: h.name,
+        city: h.city,
+        state: h.state || "",
+        specialties: h.specialties
+      })));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Failed to load hospitals");
     } finally {
@@ -53,17 +57,33 @@ export function HospitalFinderScreen({ token }: { token: string }) {
     setError("");
 
     try {
-      let url = "/hospital-finder/search?query=" + encodeURIComponent(searchQuery);
-      if (specialty) url += "&specialty=" + encodeURIComponent(specialty);
-
+      let results: Array<{ id: string; name: string; city: string; state: string; address?: string; specialties?: string[]; distance?: number; contactEmail?: string }>;
+      
       if (useLocation && latitude && longitude) {
-        url = `/hospital-finder/nearby?latitude=${latitude}&longitude=${longitude}${specialty ? "&specialty=" + encodeURIComponent(specialty) : ""}`;
+        results = await healthbridgeApi.findNearbyHospitals(latitude, longitude, undefined, specialty || undefined, token);
+      } else if (searchQuery) {
+        results = await healthbridgeApi.searchHospitals(searchQuery, specialty || undefined, undefined, token);
+      } else {
+        const hospitals = await healthbridgeApi.hospitals();
+        results = hospitals.map((h) => ({
+          id: h.id,
+          name: h.name,
+          city: h.city,
+          state: h.state || "",
+          specialties: h.specialties
+        }));
       }
-
-      const response = await healthbridgeApi.request(url, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setHospitals(response);
+      
+      setHospitals(results.map((h) => ({
+        id: h.id,
+        name: h.name,
+        city: h.city,
+        state: h.state || "",
+        address: h.address,
+        specialties: h.specialties,
+        distance: h.distance,
+        contactEmail: h.contactEmail
+      })));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Search failed");
     } finally {

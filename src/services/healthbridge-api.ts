@@ -123,14 +123,18 @@ export const healthbridgeApi = {
       timestamp: string;
     }>("/symptoms/assess", { method: "POST", body: JSON.stringify({ symptoms, notes }) }, token),
 
-  findNearbyHospitals: (latitude: number, longitude: number, radius?: number, specialty?: string) =>
+  findNearbyHospitals: (latitude: number, longitude: number, radius?: number, specialty?: string, token?: string) =>
     apiClient.request<Array<{ id: string; name: string; city: string; state: string; address: string; specialties: string[]; distance: number; contactEmail: string }>>(
-      `/hospital-finder/nearby?latitude=${latitude}&longitude=${longitude}${radius ? `&radius=${radius}` : ""}${specialty ? `&specialty=${specialty}` : ""}`
+      `/hospital-finder/nearby?latitude=${latitude}&longitude=${longitude}${radius ? `&radius=${radius}` : ""}${specialty ? `&specialty=${specialty}` : ""}`,
+      {},
+      token
     ),
 
-  searchHospitals: (query: string, specialty?: string, city?: string) =>
+  searchHospitals: (query: string, specialty?: string, city?: string, token?: string) =>
     apiClient.request<Array<{ id: string; name: string; city: string; state: string; address: string; specialties: string[]; contactEmail: string }>>(
-      `/hospital-finder/search?query=${encodeURIComponent(query)}${specialty ? `&specialty=${encodeURIComponent(specialty)}` : ""}${city ? `&city=${encodeURIComponent(city)}` : ""}`
+      `/hospital-finder/search?query=${encodeURIComponent(query)}${specialty ? `&specialty=${encodeURIComponent(specialty)}` : ""}${city ? `&city=${encodeURIComponent(city)}` : ""}`,
+      {},
+      token
     ),
 
   getHospitalDetails: (hospitalId: string) =>
@@ -172,5 +176,7 @@ export const healthbridgeApi = {
       target: string;
       reason?: string;
       date: string;
-    }>>(`/audit-logs${patientId ? `?patientId=${patientId}` : ""}`, {}, token)
+    }>>(`/audit-logs${patientId ? `?patientId=${patientId}` : ""}`, {}, token),
+
+  request: <T = unknown,>(path: string, options?: RequestInit, token?: string) => apiClient.request<T>(path, options, token)
 };

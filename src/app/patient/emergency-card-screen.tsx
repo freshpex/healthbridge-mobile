@@ -20,9 +20,7 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: any 
   const loadQRCode = async () => {
     setLoading(true);
     try {
-      const response = await healthbridgeApi.request("/qrcode/emergency", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await healthbridgeApi.getEmergencyQRCode(token);
       setCode(response.code);
       setQrCode(response.qrCodeUrl);
     } catch (caught) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScrollView, Text, TextInput, View, Pressable, ActivityIndicator } from "react-native";
+import { ScrollView, Text, TextInput, View, Pressable } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScreenView } from "../../components/layout/screen";
 import { PrimaryButton } from "../../components/buttons/primary-button";
@@ -42,12 +42,10 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
     setLoading(true);
     setError("");
     try {
-      const response = await healthbridgeApi.request("/symptoms/assess", {
-        method: "POST",
-        body: JSON.stringify({ symptoms }),
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await healthbridgeApi.assessSymptoms(token, symptoms);
+      setResult({
+        assessment: response.assessment
       });
-      setResult(response);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Failed to assess symptoms");
     } finally {

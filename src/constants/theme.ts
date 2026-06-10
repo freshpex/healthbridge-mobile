@@ -12,7 +12,10 @@ export const colors = {
   danger: "#D82D26",
   dangerSoft: "#FFFAFA",
   successSoft: "#DCF8E8",
-  blueSoft: "#EAF4FF"
+  blueSoft: "#EAF4FF",
+  text: "#071F42",
+  warning: "#D88408",
+  warningSoft: "#FFF8E1"
 };
 
 export const shadow = "0 14px 34px rgba(14, 65, 115, 0.12)";
