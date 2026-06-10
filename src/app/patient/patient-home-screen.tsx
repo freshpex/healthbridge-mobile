@@ -1,11 +1,15 @@
-import { Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { PrimaryButton } from "../../components/buttons/primary-button";
 import { InfoCard } from "../../components/cards/info-card";
 import { ScreenView } from "../../components/layout/screen";
+import { colors, shadow } from "../../constants/theme";
 import type { PatientDashboard, Screen } from "../../types/domain";
 
 const contactText = (contact: PatientDashboard["profile"]["emergencyContact"]) =>
   typeof contact === "string" ? contact : [contact?.name, contact?.relationship, contact?.phone].filter(Boolean).join(", ");
+const initials = (name: string) => name.split(" ").map((part) => part[0]).slice(0, 2).join("").toUpperCase();
+const dateText = (value?: string) => value ? new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "Not set";
 
 export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { dashboard?: PatientDashboard; refresh: () => Promise<void>; setScreen: (screen: Screen) => void; logout: () => Promise<void> }) {
   if (!dashboard) {
@@ -18,29 +22,82 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { d
   }
 
   const patient = dashboard.profile;
+  const hospitals = patient.hospitalIds ?? [];
+  const records = dashboard.records.slice(0, 4);
 
   return (
-    <ScreenView title="Patient dashboard" subtitle="Your medical profile, connected records, consent sharing, and emergency access.">
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
-        <InfoCard label="Blood group" value={patient.bloodGroup} />
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
+      <StatusBar style="dark" />
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <View style={{ gap: 4 }}>
+          <Text style={{ color: colors.navy, fontSize: 18, fontWeight: "900" }}>+ HealthBridge</Text>
+        </View>
+        <Text style={{ color: colors.danger, fontSize: 20 }}>!</Text>
+      </View>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <View>
+          <Text style={{ color: colors.ink, fontSize: 12, fontWeight: "700" }}>Welcome back,</Text>
+          <Text style={{ color: colors.ink, fontSize: 18, fontWeight: "900" }}>{patient.fullName.split(" ")[0]}</Text>
+        </View>
+        <View style={{ width: 48, height: 48, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#DFF4F8", borderWidth: 3, borderColor: "#FFFFFF", boxShadow: shadow }}>
+          <Text style={{ color: colors.navy, fontWeight: "900" }}>{initials(patient.fullName)}</Text>
+        </View>
+      </View>
+      <Pressable onPress={() => setScreen("emergency")} style={{ gap: 10, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.dangerSoft, borderWidth: 1, borderColor: "#FFC9C2", borderLeftWidth: 4, borderLeftColor: colors.danger, boxShadow: shadow }}>
+        <Text style={{ color: colors.ink, fontWeight: "900" }}>Emergency access</Text>
+        <Text style={{ color: colors.danger, fontSize: 21, fontWeight: "900", letterSpacing: 0.4 }}>{patient.emergencyCode ?? "Not enabled"}</Text>
+        <Text style={{ color: colors.muted, fontSize: 12 }}>Tap to manage critical emergency access.</Text>
+      </Pressable>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+        <InfoCard label="Blood" value={patient.bloodGroup} />
         <InfoCard label="Records" value={String(dashboard.records.length)} tone="teal" />
-        <InfoCard label="Emergency code" value={patient.emergencyCode ?? "Off"} tone="amber" />
+        <InfoCard label="Shares" value={String(dashboard.shares.filter((share) => share.status === "active").length)} tone="green" />
       </View>
-      <View style={{ gap: 10, padding: 16, borderRadius: 12, backgroundColor: "#FFFFFF" }}>
-        <Text selectable style={{ fontWeight: "900", fontSize: 18 }}>{patient.fullName}</Text>
-        <Text selectable>Hospitals: {patient.hospitalIds?.map((hospital) => hospital.name).join(", ") || patient.connectedHospitalIds.length}</Text>
-        <Text selectable>Allergies: {patient.allergies.join(", ") || "None recorded"}</Text>
-        <Text selectable>Chronic conditions: {patient.chronicConditions.join(", ") || "None recorded"}</Text>
-        <Text selectable>Current medications: {patient.currentMedications.join(", ") || "None recorded"}</Text>
-        <Text selectable>Emergency contact: {contactText(patient.emergencyContact) || "Not set"}</Text>
+      <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>Connected hospitals</Text>
+          <Text onPress={() => setScreen("sharing")} style={{ color: colors.blue, fontWeight: "900", fontSize: 12 }}>View all</Text>
+        </View>
+        {(hospitals.length ? hospitals : patient.connectedHospitalIds.map((id) => ({ id, name: id, city: "", state: "" }))).slice(0, 3).map((hospital) => (
+          <View key={hospital.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: colors.line }}>
+            <View style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: colors.blueSoft, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ color: colors.blue, fontWeight: "900" }}>H</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text selectable numberOfLines={1} style={{ color: colors.ink, fontWeight: "900", fontSize: 13 }}>{hospital.name}</Text>
+              <Text selectable numberOfLines={1} style={{ color: colors.muted, fontSize: 12 }}>{[hospital.city, hospital.state].filter(Boolean).join(", ") || "Connected"}</Text>
+            </View>
+            <Text style={{ paddingHorizontal: 8, paddingVertical: 4, borderRadius: 999, overflow: "hidden", backgroundColor: colors.successSoft, color: colors.green, fontSize: 10, fontWeight: "900" }}>Connected</Text>
+          </View>
+        ))}
       </View>
-      <PrimaryButton label="View medical records" onPress={() => setScreen("records")} />
-      <PrimaryButton label="Share records" tone="teal" onPress={() => setScreen("sharing")} />
-      <PrimaryButton label="Audit history" tone="light" onPress={() => setScreen("audit")} />
-      <PrimaryButton label="Profile settings" tone="light" onPress={() => setScreen("profile")} />
-      <PrimaryButton label="Emergency QR/code" tone="light" onPress={() => setScreen("emergency")} />
-      <PrimaryButton label="Refresh data" tone="light" onPress={refresh} />
-      <PrimaryButton label="Sign out" tone="light" onPress={logout} />
-    </ScreenView>
+      <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>Medical records</Text>
+          <Text onPress={() => setScreen("records")} style={{ color: colors.blue, fontWeight: "900", fontSize: 12 }}>View all</Text>
+        </View>
+        {records.map((record) => (
+          <View key={record.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: colors.line }}>
+            <View style={{ width: 30, height: 30, borderRadius: 999, backgroundColor: record.critical ? "#FFF6DF" : colors.blueSoft, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ color: record.critical ? colors.amber : colors.blue, fontWeight: "900" }}>{record.type[0].toUpperCase()}</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text selectable numberOfLines={1} style={{ color: colors.ink, fontWeight: "900", fontSize: 13 }}>{record.title}</Text>
+              <Text selectable numberOfLines={1} style={{ color: colors.muted, fontSize: 12 }}>{dateText(record.date)}</Text>
+            </View>
+            <Text style={{ color: colors.muted, fontSize: 11, fontWeight: "800" }}>{record.critical ? "Critical" : "PDF"}</Text>
+          </View>
+        ))}
+      </View>
+      <View style={{ gap: 8, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
+        <Text selectable style={{ color: colors.ink, fontWeight: "900" }}>Profile safety summary</Text>
+        <Text selectable style={{ color: colors.muted, lineHeight: 20 }}>Allergies: {patient.allergies.join(", ") || "None recorded"}</Text>
+        <Text selectable style={{ color: colors.muted, lineHeight: 20 }}>Emergency contact: {contactText(patient.emergencyContact) || "Not set"}</Text>
+      </View>
+      <View style={{ flexDirection: "row", gap: 10 }}>
+        <View style={{ flex: 1 }}><PrimaryButton label="Refresh" tone="light" onPress={refresh} /></View>
+        <View style={{ flex: 1 }}><PrimaryButton label="Sign out" tone="light" onPress={logout} /></View>
+      </View>
+    </ScrollView>
   );
 }

@@ -1,14 +1,18 @@
 export const colors = {
-  background: "#F7FBFF",
+  background: "#F4F9FE",
   surface: "#FFFFFF",
-  ink: "#102033",
+  ink: "#071F42",
+  navy: "#062B5F",
   muted: "#607089",
   line: "#DCE8F5",
-  blue: "#1E63FF",
-  teal: "#00A7A7",
+  blue: "#075ECF",
+  teal: "#009FA6",
   green: "#13A66B",
   amber: "#D88408",
-  danger: "#B42318"
+  danger: "#D82D26",
+  dangerSoft: "#FFFAFA",
+  successSoft: "#DCF8E8",
+  blueSoft: "#EAF4FF"
 };
 
-export const shadow = "0 18px 45px rgba(27, 85, 132, 0.12)";
+export const shadow = "0 14px 34px rgba(14, 65, 115, 0.12)";
