@@ -16,9 +16,9 @@ export function SignInScreen({
   setError: (message: string) => void;
 }) {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [name, setName] = useState("New Patient");
-  const [email, setEmail] = useState("patient@healthbridge.test");
-  const [password, setPassword] = useState("Password123!");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [selectedHospitals, setSelectedHospitals] = useState<string[]>(hospitals.slice(0, 1).map((hospital) => hospital.id));
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +38,7 @@ export function SignInScreen({
   };
 
   return (
-    <ScreenView title={mode === "signin" ? "Sign in" : "Create patient account"} subtitle="Connect securely to the HealthBridge backend API.">
+    <ScreenView title={mode === "signin" ? "Welcome back" : "Create patient account"} subtitle="Secure access for patients, hospitals, doctors, admins, and emergency teams.">
       <View style={{ flexDirection: "row", gap: 8 }}>
         <PrimaryButton label="Sign in" tone={mode === "signin" ? "teal" : "light"} onPress={() => setMode("signin")} />
         <PrimaryButton label="Sign up" tone={mode === "signup" ? "teal" : "light"} onPress={() => setMode("signup")} />
@@ -65,7 +65,7 @@ export function SignInScreen({
         </View>
       ) : (
         <View style={{ padding: 16, borderRadius: 12, backgroundColor: "#E9F9F2" }}>
-          <Text selectable style={{ color: "#09643D" }}>Seeded password: Password123!. Try patient@healthbridge.test, doctor@mercy.test, admin@mercy.test, superadmin@healthbridge.test, or emt@healthbridge.test.</Text>
+          <Text selectable style={{ color: "#09643D" }}>Use the account credentials issued by your hospital or created during patient registration.</Text>
         </View>
       )}
     </ScreenView>

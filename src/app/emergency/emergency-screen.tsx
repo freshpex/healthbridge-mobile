@@ -12,8 +12,8 @@ const contactText = (contact: EmergencyResult["emergencyContact"]) =>
   typeof contact === "string" ? contact : [contact?.name, contact?.relationship, contact?.phone].filter(Boolean).join(", ");
 
 export function EmergencyScreen({ token, dashboard, refresh }: { token?: string; dashboard?: PatientDashboard; refresh: () => Promise<void> }) {
-  const [code, setCode] = useState(dashboard?.profile.emergencyCode ?? "HB-DEMO01");
-  const [reason, setReason] = useState("Emergency intake requires critical medication and allergy information.");
+  const [code, setCode] = useState(dashboard?.profile.emergencyCode ?? "");
+  const [reason, setReason] = useState("");
   const [result, setResult] = useState<EmergencyResult>();
   const [error, setError] = useState("");
 

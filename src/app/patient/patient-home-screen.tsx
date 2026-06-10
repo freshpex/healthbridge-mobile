@@ -28,25 +28,33 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { d
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
       <StatusBar style="dark" />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-        <View style={{ gap: 4 }}>
-          <Text style={{ color: colors.navy, fontSize: 18, fontWeight: "900" }}>+ HealthBridge</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, paddingTop: 4 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <View style={{ width: 24, height: 24, borderRadius: 7, alignItems: "center", justifyContent: "center", borderWidth: 2, borderColor: colors.blue }}>
+            <Text style={{ color: colors.teal, fontSize: 18, fontWeight: "900", lineHeight: 18 }}>+</Text>
+          </View>
+          <Text style={{ color: colors.navy, fontSize: 18, fontWeight: "900" }}>HealthBridge</Text>
         </View>
-        <Text style={{ color: colors.danger, fontSize: 20 }}>!</Text>
+        <Pressable onPress={() => setScreen("audit")} style={{ width: 34, height: 34, alignItems: "center", justifyContent: "center", borderRadius: 999, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
+          <Text style={{ color: colors.danger, fontSize: 18, fontWeight: "900" }}>!</Text>
+        </Pressable>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
         <View>
           <Text style={{ color: colors.ink, fontSize: 12, fontWeight: "700" }}>Welcome back,</Text>
-          <Text style={{ color: colors.ink, fontSize: 18, fontWeight: "900" }}>{patient.fullName.split(" ")[0]}</Text>
+          <Text style={{ color: colors.ink, fontSize: 20, fontWeight: "900" }}>{patient.fullName.split(" ")[0]}</Text>
         </View>
-        <View style={{ width: 48, height: 48, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#DFF4F8", borderWidth: 3, borderColor: "#FFFFFF", boxShadow: shadow }}>
+        <View style={{ width: 52, height: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#DFF4F8", borderWidth: 3, borderColor: "#FFFFFF", boxShadow: shadow }}>
           <Text style={{ color: colors.navy, fontWeight: "900" }}>{initials(patient.fullName)}</Text>
         </View>
       </View>
       <Pressable onPress={() => setScreen("emergency")} style={{ gap: 10, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.dangerSoft, borderWidth: 1, borderColor: "#FFC9C2", borderLeftWidth: 4, borderLeftColor: colors.danger, boxShadow: shadow }}>
-        <Text style={{ color: colors.ink, fontWeight: "900" }}>Emergency access</Text>
-        <Text style={{ color: colors.danger, fontSize: 21, fontWeight: "900", letterSpacing: 0.4 }}>{patient.emergencyCode ?? "Not enabled"}</Text>
-        <Text style={{ color: colors.muted, fontSize: 12 }}>Tap to manage critical emergency access.</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <Text style={{ color: colors.ink, fontWeight: "900" }}>Emergency access</Text>
+          <Text style={{ color: colors.ink, fontSize: 20, fontWeight: "900" }}>{">"}</Text>
+        </View>
+        <Text style={{ color: colors.danger, fontSize: 11, fontWeight: "800" }}>Your emergency code</Text>
+        <Text style={{ color: colors.danger, fontSize: 22, fontWeight: "900", letterSpacing: 0.2 }}>{patient.emergencyCode ?? "Not enabled"}</Text>
       </Pressable>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
         <InfoCard label="Blood" value={patient.bloodGroup} />
@@ -60,8 +68,8 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { d
         </View>
         {(hospitals.length ? hospitals : patient.connectedHospitalIds.map((id) => ({ id, name: id, city: "", state: "" }))).slice(0, 3).map((hospital) => (
           <View key={hospital.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: colors.line }}>
-            <View style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: colors.blueSoft, alignItems: "center", justifyContent: "center" }}>
-              <Text style={{ color: colors.blue, fontWeight: "900" }}>H</Text>
+            <View style={{ width: 30, height: 30, borderRadius: 8, backgroundColor: colors.blueSoft, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "#CBE3FF" }}>
+              <Text style={{ color: colors.blue, fontWeight: "900" }}>+</Text>
             </View>
             <View style={{ flex: 1 }}>
               <Text selectable numberOfLines={1} style={{ color: colors.ink, fontWeight: "900", fontSize: 13 }}>{hospital.name}</Text>
@@ -78,7 +86,7 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { d
         </View>
         {records.map((record) => (
           <View key={record.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: colors.line }}>
-            <View style={{ width: 30, height: 30, borderRadius: 999, backgroundColor: record.critical ? "#FFF6DF" : colors.blueSoft, alignItems: "center", justifyContent: "center" }}>
+            <View style={{ width: 32, height: 32, borderRadius: 999, backgroundColor: record.critical ? "#FFF6DF" : colors.blueSoft, alignItems: "center", justifyContent: "center" }}>
               <Text style={{ color: record.critical ? colors.amber : colors.blue, fontWeight: "900" }}>{record.type[0].toUpperCase()}</Text>
             </View>
             <View style={{ flex: 1 }}>
