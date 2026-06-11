@@ -1,0 +1,52 @@
+/* eslint-disable @typescript-eslint/no-require-imports, no-undef */
+const dotenv = require("dotenv");
+
+dotenv.config({ path: ".env" });
+
+module.exports = {
+  expo: {
+    name: "HealthBridge",
+    slug: "healthbridge-mobile",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    userInterfaceStyle: "light",
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: "com.healthbridge.mobile",
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false
+      }
+    },
+    android: {
+      adaptiveIcon: {
+        backgroundColor: "#E6F4FE",
+        foregroundImage: "./assets/android-icon-foreground.png",
+        backgroundImage: "./assets/android-icon-background.png",
+        monochromeImage: "./assets/android-icon-monochrome.png"
+      },
+      predictiveBackGestureEnabled: false,
+      package: "com.healthbridge.mobile"
+    },
+    web: {
+      favicon: "./assets/favicon.png"
+    },
+    plugins: [
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/splash-icon.png",
+          resizeMode: "contain",
+          backgroundColor: "#F7FBFF"
+        }
+      ]
+    ],
+    extra: {
+      EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000/api/v1",
+      eas: {
+        projectId: "c13b91ca-59cb-4c64-b50c-ae4a88c0a309"
+      }
+    },
+    owner: "hackere"
+  }
+};

@@ -37,6 +37,7 @@
       ]
     ],
     "extra": {
+      "EXPO_PUBLIC_API_URL": "process.env.EXPO_PUBLIC_API_URL",
       "eas": {
         "projectId": "c13b91ca-59cb-4c64-b50c-ae4a88c0a309"
       }

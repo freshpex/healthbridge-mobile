@@ -3,6 +3,7 @@ import { ActivityIndicator, Text, View } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { OnboardingScreen } from "./auth/onboarding-screen";
 import { SignInScreen } from "./auth/sign-in-screen";
+import { SignUpScreen } from "./auth/sign-up-screen";
 import { AdminScreen } from "./admin/admin-screen";
 import { DoctorScreen } from "./doctor/doctor-screen";
 import { EmergencyScreen } from "./emergency/emergency-screen";
@@ -116,7 +117,8 @@ export function RootApp() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       {screen === "onboarding" ? <OnboardingScreen setScreen={setScreen} /> : null}
-      {screen === "signin" ? <SignInScreen hospitals={hospitals} onSession={onSession} setError={setError} /> : null}
+      {screen === "signin" ? <SignInScreen onSession={onSession} setError={setError} onSwitchToSignup={() => setScreen("signup")} /> : null}
+      {screen === "signup" ? <SignUpScreen hospitals={hospitals} onSession={onSession} setError={setError} onSwitchToSignin={() => setScreen("signin")} /> : null}
       {error ? <Text selectable style={{ color: colors.danger, paddingHorizontal: 18 }}>{error}</Text> : null}
       {screen === "patient" ? <PatientHomeScreen dashboard={dashboard} refresh={loadDashboard} setScreen={setScreen} logout={logout} /> : null}
       {screen === "records" ? <RecordsScreen dashboard={dashboard} /> : null}

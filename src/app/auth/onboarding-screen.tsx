@@ -12,7 +12,8 @@ export function OnboardingScreen({ setScreen }: { setScreen: (screen: Screen) =>
         <Text style={{ fontSize: 18, fontWeight: "800" }}>Patients stay in control.</Text>
         <Text style={{ color: "#607089", lineHeight: 23 }}>Connect approved hospitals, manage emergency access, share records with consent, and review audit activity from your phone.</Text>
       </View>
-      <PrimaryButton label="Get started" onPress={() => setScreen("signin")} />
+      <PrimaryButton label="Sign in" onPress={() => setScreen("signin")} />
+      <PrimaryButton tone="light" label="Create account" onPress={() => setScreen("signup")} />
     </ScreenView>
   );
 }

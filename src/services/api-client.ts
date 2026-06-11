@@ -1,4 +1,6 @@
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
+import Constants from "expo-constants";
+
+const API_URL = (Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL as string | undefined) ?? process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
 export class ApiError extends Error {
   constructor(message: string, public status: number) {
