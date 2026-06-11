@@ -69,9 +69,9 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: any 
 
         {/* Instructions */}
         <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.dangerSoft, borderWidth: 1, borderColor: colors.danger, boxShadow: shadow }}>
-          <Text style={{ color: colors.danger, fontWeight: "900", fontSize: 14 }}>🆘 Emergency Access Card</Text>
+          <Text style={{ color: colors.danger, fontWeight: "900", fontSize: 14 }}>🚨 Emergency Access Card</Text>
           <Text style={{ color: colors.danger, fontSize: 12, fontWeight: "600", lineHeight: 18 }}>
-            In an emergency, emergency responders can scan this QR code or enter your emergency code to instantly access your critical medical information including blood type, allergies, and emergency contact.
+            In an emergency, responders scan this QR code or enter your code to instantly access your critical medical information: blood type, allergies, medications, emergency contacts, and recent critical records. Every access is logged for your privacy protection.
           </Text>
         </View>
 

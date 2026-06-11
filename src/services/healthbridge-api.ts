@@ -110,5 +110,67 @@ export const healthbridgeApi = {
       currentMedications: string[];
       emergencyContact: PatientProfile["emergencyContact"];
       recentCriticalRecords: RecordItem[];
-    }>("/emergency-access/resolve", { method: "POST", body: JSON.stringify({ code, reason }) }, token)
+    }>("/emergency-access/resolve", { method: "POST", body: JSON.stringify({ code, reason }) }, token),
+
+  assessSymptoms: (token: string, symptoms: string[], notes?: string) =>
+    apiClient.request<{
+      symptoms: string[];
+      assessment: {
+        conditions: string[];
+        urgency: "low" | "medium" | "high";
+        recommendations: string[];
+      };
+      timestamp: string;
+    }>("/symptoms/assess", { method: "POST", body: JSON.stringify({ symptoms, notes }) }, token),
+
+  findNearbyHospitals: (latitude: number, longitude: number, radius?: number, specialty?: string) =>
+    apiClient.request<Array<{ id: string; name: string; city: string; state: string; address: string; specialties: string[]; distance: number; contactEmail: string }>>(
+      `/hospital-finder/nearby?latitude=${latitude}&longitude=${longitude}${radius ? `&radius=${radius}` : ""}${specialty ? `&specialty=${specialty}` : ""}`
+    ),
+
+  searchHospitals: (query: string, specialty?: string, city?: string) =>
+    apiClient.request<Array<{ id: string; name: string; city: string; state: string; address: string; specialties: string[]; contactEmail: string }>>(
+      `/hospital-finder/search?query=${encodeURIComponent(query)}${specialty ? `&specialty=${encodeURIComponent(specialty)}` : ""}${city ? `&city=${encodeURIComponent(city)}` : ""}`
+    ),
+
+  getHospitalDetails: (hospitalId: string) =>
+    apiClient.request<{
+      id: string;
+      name: string;
+      city: string;
+      state: string;
+      address: string;
+      specialties: string[];
+      contactEmail: string;
+      status: string;
+      connectedPatients: number;
+      staff: unknown[];
+    }>(`/hospital-finder/${hospitalId}/details`),
+
+  getEmergencyQRCode: (token: string) =>
+    apiClient.request<{
+      code: string;
+      qrCodeUrl: string;
+      shortCode: string;
+      instructions: string;
+      expiresAt: null;
+    }>("/qrcode/emergency", {}, token),
+
+  getProfileQRCode: (token: string) =>
+    apiClient.request<{
+      link: string;
+      qrCodeUrl: string;
+      instructions: string;
+    }>("/qrcode/profile", {}, token),
+
+  getAuditLogs: (token: string, patientId?: string) =>
+    apiClient.request<Array<{
+      id: string;
+      action: string;
+      actor: string;
+      role: string;
+      target: string;
+      reason?: string;
+      date: string;
+    }>>(`/audit-logs${patientId ? `?patientId=${patientId}` : ""}`, {}, token)
 };

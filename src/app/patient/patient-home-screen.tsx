@@ -28,24 +28,13 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { d
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
       <StatusBar style="dark" />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, paddingTop: 4 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <View style={{ width: 24, height: 24, borderRadius: 7, alignItems: "center", justifyContent: "center", borderWidth: 2, borderColor: colors.blue }}>
-            <Text style={{ color: colors.teal, fontSize: 18, fontWeight: "900", lineHeight: 18 }}>+</Text>
-          </View>
-          <Text style={{ color: colors.navy, fontSize: 18, fontWeight: "900" }}>HealthBridge</Text>
-        </View>
-        <Pressable onPress={() => setScreen("audit")} style={{ width: 34, height: 34, alignItems: "center", justifyContent: "center", borderRadius: 999, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-          <Text style={{ color: colors.danger, fontSize: 18, fontWeight: "900" }}>!</Text>
-        </Pressable>
-      </View>
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, paddingTop: 12 }}>
         <View>
           <Text style={{ color: colors.ink, fontSize: 12, fontWeight: "700" }}>Welcome back,</Text>
-          <Text style={{ color: colors.ink, fontSize: 20, fontWeight: "900" }}>{patient.fullName.split(" ")[0]}</Text>
+          <Text style={{ color: colors.navy, fontSize: 24, fontWeight: "900" }}>{patient.fullName.split(" ")[0]}</Text>
         </View>
         <View style={{ width: 52, height: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#DFF4F8", borderWidth: 3, borderColor: "#FFFFFF", boxShadow: shadow }}>
-          <Text style={{ color: colors.navy, fontWeight: "900" }}>{initials(patient.fullName)}</Text>
+          <Text style={{ color: colors.navy, fontWeight: "900", fontSize: 18 }}>{initials(patient.fullName)}</Text>
         </View>
       </View>
       <Pressable onPress={() => setScreen("emergency")} style={{ gap: 10, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.dangerSoft, borderWidth: 1, borderColor: "#FFC9C2", borderLeftWidth: 4, borderLeftColor: colors.danger, boxShadow: shadow }}>

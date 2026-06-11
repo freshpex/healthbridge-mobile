@@ -89,9 +89,15 @@ export function HospitalFinderScreen({ token }: { token: string }) {
   };
 
   return (
-    <ScreenView title="Hospital Finder" subtitle="Find the right facility for your needs">
+    <ScreenView title="Hospital Finder" subtitle="Find specialized care near you">
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
         <StatusBar style="dark" />
+
+        {/* Header Info */}
+        <View style={{ gap: 8, paddingBottom: 8 }}>
+          <Text style={{ color: colors.navy, fontSize: 16, fontWeight: "900" }}>Find the Right Care</Text>
+          <Text style={{ color: colors.muted, fontSize: 13, lineHeight: 18 }}>Search for hospitals by specialty and location. Connect to your preferred facilities to enable secure record sharing.</Text>
+        </View>
 
         {/* Search Form */}
         <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
