@@ -39,7 +39,7 @@ export function OnboardingScreen({ setScreen }: { setScreen: (screen: Screen) =>
         </View>
       </View>
       <PrimaryButton label="Sign in" onPress={() => setScreen("signin")} />
-      <PrimaryButton tone="light" label="Create account" onPress={() => setScreen("signup")} />
+      <PrimaryButton tone="light" label="Create account" onPress={() => setScreen("role-select")} />
     </ScreenView>
   );
 }

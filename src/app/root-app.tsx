@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, View, SafeAreaView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
-import { LogOut } from "lucide-react-native";
+import { LogOut, MessageCircle } from "lucide-react-native";
 import { OnboardingScreen } from "./auth/onboarding-screen";
 import { SignInScreen } from "./auth/sign-in-screen";
 import { SignUpScreen } from "./auth/sign-up-screen";
+import { RoleSelectScreen } from "./auth/role-select-screen";
 import { AdminScreen } from "./admin/admin-screen";
 import { DoctorScreen } from "./doctor/doctor-screen";
 import { EmergencyScreen } from "./emergency/emergency-screen";
@@ -21,7 +23,7 @@ import { HospitalFinderScreen } from "./patient/hospital-finder-screen";
 import { EmergencyCardScreen } from "./patient/emergency-card-screen";
 import { Tabs } from "../navigation/tabs";
 import { healthbridgeApi, type AuthSession } from "../services/healthbridge-api";
-import type { Hospital, PatientDashboard, Screen, User } from "../types/domain";
+import type { Hospital, PatientDashboard, Role, Screen, User } from "../types/domain";
 import { colors } from "../constants/theme";
 import { homeForRole } from "../utilities/rbac";
 
@@ -46,8 +48,10 @@ export function RootApp() {
   const [token, setToken] = useState<string | undefined>();
   const [dashboard, setDashboard] = useState<PatientDashboard | undefined>();
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [selectedRole, setSelectedRole] = useState<Role>("patient");
   const [booting, setBooting] = useState(true);
   const [error, setError] = useState("");
+  const insets = useSafeAreaInsets();
 
   const persistSession = async (session: AuthSession) => {
     setUser(session.user);
@@ -118,18 +122,20 @@ export function RootApp() {
   };
 
   const showPatientChrome = user?.role === "patient" && patientScreens.includes(screen);
+  const showAuthenticatedUi = !!user && screen !== "onboarding" && screen !== "signin" && screen !== "signup" && screen !== "role-select";
+  const showAiButton = showAuthenticatedUi && screen !== "ai-chat";
 
   if (booting) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background, gap: 12 }}>
+      <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background, gap: 12 }}>
         <ActivityIndicator color={colors.teal} />
         <Text selectable style={{ color: colors.muted }}>Checking HealthBridge session...</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {showPatientChrome ? (
         <View style={{ paddingHorizontal: 16, paddingTop: 14, paddingBottom: 10, backgroundColor: colors.background, borderBottomWidth: 1, borderBottomColor: colors.line }}>
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
@@ -159,8 +165,9 @@ export function RootApp() {
       ) : null}
       <View style={{ flex: 1 }}>
         {screen === "onboarding" ? <OnboardingScreen setScreen={setScreen} /> : null}
-        {screen === "signin" ? <SignInScreen onSession={onSession} setError={setError} onSwitchToSignup={() => setScreen("signup")} onBack={() => setScreen("onboarding")} /> : null}
-        {screen === "signup" ? <SignUpScreen hospitals={hospitals} onSession={onSession} setError={setError} onSwitchToSignin={() => setScreen("signin")} onBack={() => setScreen("onboarding")} /> : null}
+        {screen === "signin" ? <SignInScreen onSession={onSession} setError={setError} onSwitchToSignup={() => setScreen("role-select")} onBack={() => setScreen("onboarding")} /> : null}
+        {screen === "role-select" ? <RoleSelectScreen selectedRole={selectedRole} onSelectRole={(role) => { setSelectedRole(role); setScreen("signup"); }} onBack={() => setScreen("onboarding")} /> : null}
+        {screen === "signup" ? <SignUpScreen hospitals={hospitals} selectedRole={selectedRole} onRoleChange={setSelectedRole} onSession={onSession} setError={setError} onSwitchToSignin={() => setScreen("signin")} onBack={() => setScreen("role-select")} /> : null}
         {error ? <Text selectable style={{ color: colors.danger, paddingHorizontal: 18, paddingTop: 8 }}>{error}</Text> : null}
         {screen === "patient" ? <PatientHomeScreen dashboard={dashboard} refresh={loadDashboard} setScreen={setScreen} logout={logout} /> : null}
         {screen === "ai-chat" ? <AiChatScreen token={token} onBack={() => setScreen("patient")} /> : null}
@@ -177,11 +184,34 @@ export function RootApp() {
         {screen === "laboratory" ? token ? <LaboratoryScreen token={token} user={user} onLogout={logout} /> : null : null}
         {screen === "admin" ? <AdminScreen token={token} user={user} logout={logout} /> : null}
       </View>
+      {showAiButton ? (
+        <Pressable
+          onPress={() => setScreen("ai-chat")}
+          style={{
+            position: "absolute",
+            right: 18,
+            bottom: showPatientChrome ? insets.bottom + 94 : insets.bottom + 18,
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+            backgroundColor: colors.blue,
+            alignItems: "center",
+            justifyContent: "center",
+            shadowColor: "#0A1F44",
+            shadowOpacity: 0.18,
+            shadowRadius: 10,
+            shadowOffset: { width: 0, height: 8 },
+            elevation: 10
+          }}
+        >
+          <MessageCircle color="#FFFFFF" size={24} />
+        </Pressable>
+      ) : null}
       {showPatientChrome ? (
-        <View style={{ position: "absolute", left: 14, right: 14, bottom: 14, padding: 8, borderRadius: 24, borderCurve: "continuous", borderWidth: 1, borderColor: colors.line, backgroundColor: "rgba(255,255,255,0.96)", boxShadow: "0 18px 40px rgba(14, 65, 115, 0.18)" }}>
+        <View style={{ position: "absolute", left: 14, right: 14, bottom: insets.bottom + 14, padding: 8, borderRadius: 24, borderCurve: "continuous", borderWidth: 1, borderColor: colors.line, backgroundColor: "rgba(255,255,255,0.96)", boxShadow: "0 18px 40px rgba(14, 65, 115, 0.18)" }}>
           <Tabs current={screen} onChange={setScreen} />
         </View>
       ) : null}
-    </View>
+    </SafeAreaView>
   );
 }
