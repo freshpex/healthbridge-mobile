@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, Text, View, SafeAreaView } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { LogOut, MessageCircle } from "lucide-react-native";
 import { OnboardingScreen } from "./auth/onboarding-screen";
@@ -127,7 +127,7 @@ export function RootApp() {
 
   if (booting) {
     return (
-      <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background, gap: 12 }}>
+      <SafeAreaView style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom, justifyContent: "center", alignItems: "center", backgroundColor: colors.background, gap: 12 }}>
         <ActivityIndicator color={colors.teal} />
         <Text selectable style={{ color: colors.muted }}>Checking HealthBridge session...</Text>
       </SafeAreaView>
@@ -135,7 +135,7 @@ export function RootApp() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background, paddingTop: insets.top, paddingBottom: insets.bottom }}>
       {showPatientChrome ? (
         <View style={{ paddingHorizontal: 16, paddingTop: 14, paddingBottom: 10, backgroundColor: colors.background, borderBottomWidth: 1, borderBottomColor: colors.line }}>
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>

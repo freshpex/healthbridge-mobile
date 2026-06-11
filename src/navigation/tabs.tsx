@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from "react-native";
-import { CirclePlus, FileText, Home, Share2, UserRound } from "lucide-react-native";
+import { Activity, CirclePlus, FileText, Home, Share2, UserRound } from "lucide-react-native";
 import { colors } from "../constants/theme";
 import type { Screen } from "../types/domain";
 
@@ -7,6 +7,7 @@ export function Tabs({ current, onChange }: { current: Screen; onChange: (screen
   const items: Array<{ screen: Screen; label: string; icon: typeof Home; center?: boolean }> = [
     { screen: "patient", label: "Home", icon: Home },
     { screen: "records", label: "Records", icon: FileText },
+    { screen: "symptoms", label: "Symptoms", icon: Activity },
     { screen: "emergency-card", label: "Card", icon: CirclePlus, center: true },
     { screen: "sharing", label: "Share", icon: Share2 },
     { screen: "profile", label: "Profile", icon: UserRound }

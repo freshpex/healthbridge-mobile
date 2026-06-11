@@ -1,4 +1,4 @@
-export type Role = "patient" | "doctor" | "hospital_admin" | "super_admin" | "emergency_staff" | "laboratory";
+export type Role = "patient" | "doctor" | "hospital_admin" | "emergency_staff" | "laboratory";
 export type Screen = "onboarding" | "role-select" | "signin" | "signup" | "patient" | "records" | "sharing" | "emergency" | "emergency-card" | "symptoms" | "hospital-finder" | "audit" | "profile" | "hospital" | "doctor" | "admin" | "laboratory" | "ai-chat";
 
 export interface User {

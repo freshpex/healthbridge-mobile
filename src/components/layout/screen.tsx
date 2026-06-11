@@ -1,12 +1,19 @@
 import type { ReactNode } from "react";
-import { ScrollView, Text, View, Pressable, SafeAreaView } from "react-native";
+import { ScrollView, Text, View, Pressable } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { colors } from "../../constants/theme";
 
 export function ScreenView({ title, subtitle, children, onBack }: { title: string; subtitle?: string; children: ReactNode; onBack?: () => void }) {
+  const insets = useSafeAreaInsets();
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 128 }}>
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 128 + insets.bottom }}
+      >
         <StatusBar style="dark" />
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           {onBack ? (
