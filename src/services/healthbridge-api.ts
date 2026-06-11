@@ -1,5 +1,5 @@
 import { apiClient } from "./api-client";
-import type { ConsentShare, Hospital, PatientDashboard, PatientProfile, RecordItem, User } from "../types/domain";
+import type { ConsentShare, Hospital, PatientDashboard, PatientProfile, RecordItem, User, Role } from "../types/domain";
 
 export interface AuthSession {
   user: User;
@@ -45,8 +45,11 @@ export const healthbridgeApi = {
   login: (email: string, password: string) =>
     apiClient.request<AuthSession>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }),
 
-  signup: (payload: { name: string; email: string; password: string; hospitalIds: string[] }) =>
-    apiClient.request<AuthSession>("/auth/signup", { method: "POST", body: JSON.stringify({ ...payload, role: "patient" }) }),
+  signup: (payload: { name: string; email: string; password: string; hospitalIds: string[]; role?: Role }) =>
+    apiClient.request<AuthSession>("/auth/signup", { method: "POST", body: JSON.stringify(payload) }),
+  
+  aiChat: (token: string | undefined, messages: { role: "user" | "assistant" | "system"; content: string }[]) =>
+    apiClient.request<{ id: string; reply: string }>("/ai/chat", { method: "POST", body: JSON.stringify({ messages }) }, token),
 
   refresh: (refreshToken: string) =>
     apiClient.request<AuthSession>("/auth/refresh", { method: "POST", body: JSON.stringify({ refreshToken }) }),

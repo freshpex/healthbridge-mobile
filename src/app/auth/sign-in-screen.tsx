@@ -9,11 +9,13 @@ import { healthbridgeApi, type AuthSession } from "../../services/healthbridge-a
 export function SignInScreen({
   onSession,
   setError,
-  onSwitchToSignup
+  onSwitchToSignup,
+  onBack
 }: {
   onSession: (session: AuthSession) => Promise<void>;
   setError: (message: string) => void;
   onSwitchToSignup: () => void;
+  onBack?: () => void;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +36,7 @@ export function SignInScreen({
   };
 
   return (
-    <ScreenView title="Sign in to HealthBridge" subtitle="Use your patient account to access emergency access, records, and hospital connections.">
+    <ScreenView title="Sign in to HealthBridge" subtitle="Use your patient account to access emergency access, records, and hospital connections." onBack={onBack}>
       <ScrollView contentContainerStyle={{ gap: 18 }} showsVerticalScrollIndicator={false}>
         <View style={{ gap: 12, padding: 16, borderRadius: 16, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE8F5" }}>
           <Text style={{ fontSize: 16, fontWeight: "900", color: colors.ink }}>Welcome back</Text>

@@ -11,6 +11,7 @@ import { EmergencyScreen } from "./emergency/emergency-screen";
 import { HospitalScreen } from "./hospital/hospital-screen";
 import { LaboratoryScreen } from "./laboratory/laboratory-screen";
 import { PatientHomeScreen } from "./patient/patient-home-screen";
+import { AiChatScreen } from "./patient/ai-chat-screen";
 import { AuditScreen } from "./patient/audit-screen";
 import { ProfileScreen } from "./patient/profile-screen";
 import { RecordsScreen } from "./patient/records-screen";
@@ -158,10 +159,11 @@ export function RootApp() {
       ) : null}
       <View style={{ flex: 1 }}>
         {screen === "onboarding" ? <OnboardingScreen setScreen={setScreen} /> : null}
-        {screen === "signin" ? <SignInScreen onSession={onSession} setError={setError} onSwitchToSignup={() => setScreen("signup")} /> : null}
-        {screen === "signup" ? <SignUpScreen hospitals={hospitals} onSession={onSession} setError={setError} onSwitchToSignin={() => setScreen("signin")} /> : null}
+        {screen === "signin" ? <SignInScreen onSession={onSession} setError={setError} onSwitchToSignup={() => setScreen("signup")} onBack={() => setScreen("onboarding")} /> : null}
+        {screen === "signup" ? <SignUpScreen hospitals={hospitals} onSession={onSession} setError={setError} onSwitchToSignin={() => setScreen("signin")} onBack={() => setScreen("onboarding")} /> : null}
         {error ? <Text selectable style={{ color: colors.danger, paddingHorizontal: 18, paddingTop: 8 }}>{error}</Text> : null}
         {screen === "patient" ? <PatientHomeScreen dashboard={dashboard} refresh={loadDashboard} setScreen={setScreen} logout={logout} /> : null}
+        {screen === "ai-chat" ? <AiChatScreen token={token} onBack={() => setScreen("patient")} /> : null}
         {screen === "records" ? <RecordsScreen dashboard={dashboard} /> : null}
         {screen === "sharing" ? <SharingScreen token={token} dashboard={dashboard} hospitals={hospitals} refresh={loadDashboard} /> : null}
         {screen === "emergency" ? <EmergencyScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}

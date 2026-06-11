@@ -11,13 +11,16 @@ export function SignUpScreen({
   hospitals,
   onSession,
   setError,
-  onSwitchToSignin
+  onSwitchToSignin,
+  onBack
 }: {
   hospitals: Hospital[];
   onSession: (session: AuthSession) => Promise<void>;
   setError: (message: string) => void;
   onSwitchToSignin: () => void;
+  onBack?: () => void;
 }) {
+  const [role, setRole] = useState<"patient" | "doctor" | "hospital_admin" | "laboratory" | "emergency_staff">("patient");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +32,7 @@ export function SignUpScreen({
     setLoading(true);
     setError("");
     try {
-      const session = await healthbridgeApi.signup({ name, email, password, hospitalIds: selectedHospitals });
+      const session = await healthbridgeApi.signup({ name, email, password, hospitalIds: selectedHospitals, role });
       await onSession(session);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Signup failed");
@@ -39,7 +42,7 @@ export function SignUpScreen({
   };
 
   return (
-    <ScreenView title="Create your HealthBridge account" subtitle="Sign up as a patient and connect securely with approved hospitals.">
+    <ScreenView title="Create your HealthBridge account" subtitle="Sign up as a patient and connect securely with approved hospitals." onBack={onBack}>
       <View style={{ gap: 14, padding: 16, borderRadius: 16, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE8F5" }}>
         <Text style={{ fontSize: 16, fontWeight: "900", color: colors.ink }}>Join HealthBridge</Text>
         <Text style={{ color: colors.muted, lineHeight: 22 }}>Enter your information below to create a secure patient account. You can manage emergency access, consent sharing, and hospital connections from your phone.</Text>
@@ -63,6 +66,14 @@ export function SignUpScreen({
       </View>
 
       <View style={{ gap: 10 }}>
+        <Text style={{ fontWeight: "900", fontSize: 16 }}>Register as</Text>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          {["patient", "doctor", "hospital_admin", "laboratory", "emergency_staff"].map((r) => (
+            <Pressable key={r} onPress={() => setRole(r as any)} style={{ padding: 8, borderRadius: 8, borderWidth: 1, borderColor: role === r ? colors.teal : colors.line, backgroundColor: role === r ? colors.teal + "15" : colors.surface }}>
+              <Text style={{ fontWeight: "800", textTransform: "capitalize" }}>{r.replaceAll("_", " ")}</Text>
+            </Pressable>
+          ))}
+        </View>
         <Text style={{ fontWeight: "900", fontSize: 16 }}>Connect to approved hospitals</Text>
         {hospitals.length === 0 ? (
           <Text style={{ color: colors.muted }}>No approved hospitals are available yet. You can still register and connect once hospitals are available.</Text>

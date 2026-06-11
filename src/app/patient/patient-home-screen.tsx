@@ -93,6 +93,9 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { d
       </View>
       <View style={{ flexDirection: "row", gap: 10 }}>
         <View style={{ flex: 1 }}><PrimaryButton label="Refresh" tone="light" onPress={refresh} /></View>
+        <View style={{ flex: 1 }}><PrimaryButton label="AI Assistant" tone="light" onPress={() => setScreen("ai-chat")} /></View>
+      </View>
+      <View style={{ flexDirection: "row", gap: 10, marginTop: 8 }}>
         <View style={{ flex: 1 }}><PrimaryButton label="Sign out" tone="light" onPress={logout} /></View>
       </View>
     </ScrollView>
