@@ -129,10 +129,10 @@ export function RootApp() {
       {screen === "hospital-finder" ? token ? <HospitalFinderScreen token={token} /> : null : null}
       {screen === "audit" ? <AuditScreen dashboard={dashboard} /> : null}
       {screen === "profile" ? <ProfileScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
-      {screen === "hospital" ? <HospitalScreen token={token} user={user} /> : null}
-      {screen === "doctor" ? <DoctorScreen token={token} user={user} /> : null}
-      {screen === "laboratory" ? token ? <LaboratoryScreen token={token} onLogout={logout} /> : null : null}
-      {screen === "admin" ? <AdminScreen token={token} /> : null}
+      {screen === "hospital" ? <HospitalScreen token={token} user={user} logout={logout} /> : null}
+      {screen === "doctor" ? <DoctorScreen token={token} user={user} logout={logout} /> : null}
+      {screen === "laboratory" ? token ? <LaboratoryScreen token={token} user={user} onLogout={logout} /> : null : null}
+      {screen === "admin" ? <AdminScreen token={token} user={user} logout={logout} /> : null}
       {showPatientTabs ? (
         <View style={{ position: "absolute", left: 14, right: 14, bottom: 14, padding: 8, borderRadius: 20, borderCurve: "continuous", borderWidth: 1, borderTopWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, boxShadow: "0 18px 40px rgba(14, 65, 115, 0.18)" }}>
           <Tabs current={screen} onChange={setScreen} />
