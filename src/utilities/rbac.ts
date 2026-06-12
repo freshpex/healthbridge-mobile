@@ -5,7 +5,8 @@ export const homeForRole: Record<Role, Screen> = {
   doctor: "doctor",
   hospital_admin: "hospital",
   super_admin: "admin",
-  emergency_staff: "emergency"
+  emergency_staff: "emergency",
+  laboratory: "laboratory"
 };
 
 export const canOpenEmergency = (role: Role) => role === "emergency_staff" || role === "doctor" || role === "patient";

@@ -7,6 +7,7 @@ import { AdminScreen } from "./admin/admin-screen";
 import { DoctorScreen } from "./doctor/doctor-screen";
 import { EmergencyScreen } from "./emergency/emergency-screen";
 import { HospitalScreen } from "./hospital/hospital-screen";
+import { LaboratoryScreen } from "./laboratory/laboratory-screen";
 import { PatientHomeScreen } from "./patient/patient-home-screen";
 import { AuditScreen } from "./patient/audit-screen";
 import { ProfileScreen } from "./patient/profile-screen";
@@ -128,6 +129,7 @@ export function RootApp() {
       {screen === "profile" ? <ProfileScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
       {screen === "hospital" ? <HospitalScreen token={token} user={user} /> : null}
       {screen === "doctor" ? <DoctorScreen token={token} user={user} /> : null}
+      {screen === "laboratory" ? token ? <LaboratoryScreen token={token} onLogout={logout} /> : null : null}
       {screen === "admin" ? <AdminScreen token={token} /> : null}
       {showPatientTabs ? (
         <View style={{ position: "absolute", left: 14, right: 14, bottom: 14, padding: 8, borderRadius: 20, borderCurve: "continuous", borderWidth: 1, borderTopWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, boxShadow: "0 18px 40px rgba(14, 65, 115, 0.18)" }}>

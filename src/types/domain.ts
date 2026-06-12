@@ -1,5 +1,5 @@
-export type Role = "patient" | "doctor" | "hospital_admin" | "super_admin" | "emergency_staff";
-export type Screen = "onboarding" | "signin" | "patient" | "records" | "sharing" | "emergency" | "emergency-card" | "symptoms" | "hospital-finder" | "audit" | "profile" | "hospital" | "doctor" | "admin";
+export type Role = "patient" | "doctor" | "hospital_admin" | "super_admin" | "emergency_staff" | "laboratory";
+export type Screen = "onboarding" | "signin" | "patient" | "records" | "sharing" | "emergency" | "emergency-card" | "symptoms" | "hospital-finder" | "audit" | "profile" | "hospital" | "doctor" | "admin" | "laboratory";
 
 export interface User {
   id: string;
@@ -53,6 +53,20 @@ export interface ConsentShare {
   scopes: string[];
   status: "active" | "revoked" | "expired";
   expiresAt?: string;
+}
+
+export interface Laboratory {
+  _id?: string;
+  id: string;
+  labName: string;
+  status: "approved" | "pending" | "suspended";
+  certificationNumber: string;
+  department: string;
+  hospitalId?: string;
+  hospitalName?: string;
+  testCapabilities: string[];
+  isActive: boolean;
+  isStandalone: boolean;
 }
 
 export interface AuditLog {
