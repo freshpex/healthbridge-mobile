@@ -1,6 +1,10 @@
 import Constants from "expo-constants";
 
-const API_URL = (Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL as string | undefined) ?? process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
+const FALLBACK_API_URL = "https://healthbridge-backend-wroj.onrender.com/api/v1";
+const API_URL =
+  (Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL as string | undefined) ??
+  process.env.EXPO_PUBLIC_API_URL ??
+  FALLBACK_API_URL;
 
 export class ApiError extends Error {
   constructor(message: string, public status: number) {

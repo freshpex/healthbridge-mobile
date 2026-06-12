@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 
 dotenv.config({ path: ".env" });
 
+const FALLBACK_API_URL = "https://healthbridge-backend-wroj.onrender.com/api/v1";
+
 module.exports = {
   expo: {
     name: "HealthBridge",
@@ -42,7 +44,7 @@ module.exports = {
       ]
     ],
     extra: {
-      EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000/api/v1",
+      EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL ?? FALLBACK_API_URL,
       eas: {
         projectId: "c13b91ca-59cb-4c64-b50c-ae4a88c0a309"
       }

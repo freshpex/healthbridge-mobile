@@ -1,5 +1,6 @@
 import { ScrollView, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { ChevronLeft, SlidersHorizontal } from "lucide-react-native";
 import { colors, shadow } from "../../constants/theme";
 import type { PatientDashboard } from "../../types/domain";
 
@@ -15,17 +16,21 @@ export function RecordsScreen({ dashboard }: { dashboard?: PatientDashboard }) {
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 12, paddingBottom: 112 }}>
       <StatusBar style="dark" />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingTop: 4 }}>
-        <Text style={{ color: colors.ink, fontSize: 24, fontWeight: "900" }}>{"<"}</Text>
+        <View style={{ width: 36, height: 36, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
+          <ChevronLeft size={18} color={colors.ink} />
+        </View>
         <Text style={{ color: colors.ink, fontSize: 17, fontWeight: "900" }}>Medical records</Text>
-        <Text style={{ color: colors.ink, fontSize: 18, fontWeight: "900" }}>v</Text>
+        <View style={{ width: 36, height: 36, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
+          <SlidersHorizontal size={18} color={colors.ink} />
+        </View>
       </View>
-      <View style={{ flexDirection: "row", gap: 8 }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 2 }}>
         {["All", "Lab", "Imaging", "Visits", "Other"].map((item, index) => (
-          <View key={item} style={{ paddingHorizontal: 10, paddingVertical: 7, borderRadius: 7, backgroundColor: index === 0 ? colors.blue : "#EEF3F8" }}>
+          <View key={item} style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, backgroundColor: index === 0 ? colors.blue : "#EEF3F8" }}>
             <Text style={{ color: index === 0 ? "#FFFFFF" : colors.muted, fontSize: 11, fontWeight: "900" }}>{item}</Text>
           </View>
         ))}
-      </View>
+      </ScrollView>
       {!dashboard ? <Text selectable>Loading records...</Text> : null}
       {dashboard && records.length === 0 && labs.length === 0 ? <Text selectable style={{ color: colors.muted }}>No medical records have synced yet.</Text> : null}
       {records.map((record) => (

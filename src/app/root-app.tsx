@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { LogOut } from "lucide-react-native";
 import { OnboardingScreen } from "./auth/onboarding-screen";
 import { SignInScreen } from "./auth/sign-in-screen";
 import { SignUpScreen } from "./auth/sign-up-screen";
@@ -25,6 +26,18 @@ import { homeForRole } from "../utilities/rbac";
 
 const accessKey = "healthbridge-mobile-access-token";
 const refreshKey = "healthbridge-mobile-refresh-token";
+const patientScreens: Screen[] = ["patient", "records", "sharing", "emergency", "emergency-card", "symptoms", "hospital-finder", "audit", "profile"];
+const screenTitles: Partial<Record<Screen, string>> = {
+  patient: "Home",
+  records: "Medical records",
+  sharing: "Share records",
+  emergency: "Emergency access",
+  "emergency-card": "Emergency card",
+  symptoms: "Symptom checker",
+  "hospital-finder": "Hospital finder",
+  audit: "Audit history",
+  profile: "Profile"
+};
 
 export function RootApp() {
   const [screen, setScreen] = useState<Screen>("onboarding");
@@ -103,7 +116,7 @@ export function RootApp() {
     setScreen("signin");
   };
 
-  const showPatientTabs = user?.role === "patient" && ["patient", "records", "sharing", "emergency", "emergency-card", "symptoms", "hospital-finder", "audit", "profile"].includes(screen);
+  const showPatientChrome = user?.role === "patient" && patientScreens.includes(screen);
 
   if (booting) {
     return (
@@ -116,25 +129,54 @@ export function RootApp() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      {screen === "onboarding" ? <OnboardingScreen setScreen={setScreen} /> : null}
-      {screen === "signin" ? <SignInScreen onSession={onSession} setError={setError} onSwitchToSignup={() => setScreen("signup")} /> : null}
-      {screen === "signup" ? <SignUpScreen hospitals={hospitals} onSession={onSession} setError={setError} onSwitchToSignin={() => setScreen("signin")} /> : null}
-      {error ? <Text selectable style={{ color: colors.danger, paddingHorizontal: 18 }}>{error}</Text> : null}
-      {screen === "patient" ? <PatientHomeScreen dashboard={dashboard} refresh={loadDashboard} setScreen={setScreen} logout={logout} /> : null}
-      {screen === "records" ? <RecordsScreen dashboard={dashboard} /> : null}
-      {screen === "sharing" ? <SharingScreen token={token} dashboard={dashboard} hospitals={hospitals} refresh={loadDashboard} /> : null}
-      {screen === "emergency" ? <EmergencyScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
-      {screen === "emergency-card" ? token && user ? <EmergencyCardScreen token={token} user={user} /> : null : null}
-      {screen === "symptoms" ? token ? <SymptomsScreen token={token} setScreen={setScreen} /> : null : null}
-      {screen === "hospital-finder" ? token ? <HospitalFinderScreen token={token} /> : null : null}
-      {screen === "audit" ? <AuditScreen dashboard={dashboard} /> : null}
-      {screen === "profile" ? <ProfileScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
-      {screen === "hospital" ? <HospitalScreen token={token} user={user} logout={logout} /> : null}
-      {screen === "doctor" ? <DoctorScreen token={token} user={user} logout={logout} /> : null}
-      {screen === "laboratory" ? token ? <LaboratoryScreen token={token} user={user} onLogout={logout} /> : null : null}
-      {screen === "admin" ? <AdminScreen token={token} user={user} logout={logout} /> : null}
-      {showPatientTabs ? (
-        <View style={{ position: "absolute", left: 14, right: 14, bottom: 14, padding: 8, borderRadius: 20, borderCurve: "continuous", borderWidth: 1, borderTopWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, boxShadow: "0 18px 40px rgba(14, 65, 115, 0.18)" }}>
+      {showPatientChrome ? (
+        <View style={{ paddingHorizontal: 16, paddingTop: 14, paddingBottom: 10, backgroundColor: colors.background, borderBottomWidth: 1, borderBottomColor: colors.line }}>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <View style={{ gap: 2 }}>
+              <Text style={{ color: colors.teal, fontSize: 11, fontWeight: "900", letterSpacing: 1.2 }}>HEALTHBRIDGE</Text>
+              <Text style={{ color: colors.ink, fontSize: 18, fontWeight: "900" }}>{screenTitles[screen] ?? "HealthBridge"}</Text>
+            </View>
+            <Pressable
+              onPress={logout}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 8,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                borderRadius: 999,
+                backgroundColor: colors.surface,
+                borderWidth: 1,
+                borderColor: colors.line
+              }}
+            >
+              <LogOut color={colors.ink} size={16} />
+              <Text style={{ color: colors.ink, fontWeight: "800", fontSize: 12 }}>Sign out</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : null}
+      <View style={{ flex: 1 }}>
+        {screen === "onboarding" ? <OnboardingScreen setScreen={setScreen} /> : null}
+        {screen === "signin" ? <SignInScreen onSession={onSession} setError={setError} onSwitchToSignup={() => setScreen("signup")} /> : null}
+        {screen === "signup" ? <SignUpScreen hospitals={hospitals} onSession={onSession} setError={setError} onSwitchToSignin={() => setScreen("signin")} /> : null}
+        {error ? <Text selectable style={{ color: colors.danger, paddingHorizontal: 18, paddingTop: 8 }}>{error}</Text> : null}
+        {screen === "patient" ? <PatientHomeScreen dashboard={dashboard} refresh={loadDashboard} setScreen={setScreen} logout={logout} /> : null}
+        {screen === "records" ? <RecordsScreen dashboard={dashboard} /> : null}
+        {screen === "sharing" ? <SharingScreen token={token} dashboard={dashboard} hospitals={hospitals} refresh={loadDashboard} /> : null}
+        {screen === "emergency" ? <EmergencyScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
+        {screen === "emergency-card" ? token && user ? <EmergencyCardScreen token={token} user={user} /> : null : null}
+        {screen === "symptoms" ? token ? <SymptomsScreen token={token} setScreen={setScreen} /> : null : null}
+        {screen === "hospital-finder" ? token ? <HospitalFinderScreen token={token} /> : null : null}
+        {screen === "audit" ? <AuditScreen dashboard={dashboard} /> : null}
+        {screen === "profile" ? <ProfileScreen token={token} dashboard={dashboard} refresh={loadDashboard} /> : null}
+        {screen === "hospital" ? <HospitalScreen token={token} user={user} logout={logout} /> : null}
+        {screen === "doctor" ? <DoctorScreen token={token} user={user} logout={logout} /> : null}
+        {screen === "laboratory" ? token ? <LaboratoryScreen token={token} user={user} onLogout={logout} /> : null : null}
+        {screen === "admin" ? <AdminScreen token={token} user={user} logout={logout} /> : null}
+      </View>
+      {showPatientChrome ? (
+        <View style={{ position: "absolute", left: 14, right: 14, bottom: 14, padding: 8, borderRadius: 24, borderCurve: "continuous", borderWidth: 1, borderColor: colors.line, backgroundColor: "rgba(255,255,255,0.96)", boxShadow: "0 18px 40px rgba(14, 65, 115, 0.18)" }}>
           <Tabs current={screen} onChange={setScreen} />
         </View>
       ) : null}

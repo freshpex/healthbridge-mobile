@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Eye, EyeOff } from "lucide-react-native";
 import { PrimaryButton } from "../../components/buttons/primary-button";
 import { ScreenView } from "../../components/layout/screen";
 import { colors } from "../../constants/theme";
@@ -17,6 +18,7 @@ export function SignInScreen({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const submit = async () => {
     setLoading(true);
@@ -41,7 +43,18 @@ export function SignInScreen({
 
         <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
           <TextInput value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" placeholder="Email" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14 }} />
-          <TextInput value={password} onChangeText={setPassword} secureTextEntry placeholder="Password" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14 }} />
+          <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingRight: 12, backgroundColor: colors.surface }}>
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              placeholder="Password"
+              style={{ flex: 1, padding: 14 }}
+            />
+            <Pressable onPress={() => setShowPassword((current) => !current)} hitSlop={10}>
+              {showPassword ? <EyeOff color={colors.muted} size={18} /> : <Eye color={colors.muted} size={18} />}
+            </Pressable>
+          </View>
         </View>
 
         <PrimaryButton label={loading ? "Signing in..." : "Sign in securely"} onPress={submit} />
