@@ -11,11 +11,11 @@ const contactText = (contact: PatientDashboard["profile"]["emergencyContact"]) =
 const initials = (name: string) => name.split(" ").map((part) => part[0]).slice(0, 2).join("").toUpperCase();
 const dateText = (value?: string) => value ? new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "Not set";
 
-export function PatientHomeScreen({ dashboard, refresh, setScreen, logout }: { dashboard?: PatientDashboard; refresh: () => Promise<void>; setScreen: (screen: Screen) => void; logout: () => Promise<void> }) {
+export function PatientHomeScreen({ dashboard, refresh, setScreen, logout, loading }: { dashboard?: PatientDashboard; refresh: () => Promise<void>; setScreen: (screen: Screen) => void; logout: () => Promise<void>; loading?: boolean }) {
   if (!dashboard) {
     return (
       <ScreenView title="Patient dashboard" subtitle="Loading your secure health bridge.">
-        <Text selectable>Loading patient data from the API...</Text>
+        <Text selectable>{loading ? "Loading patient data from the API..." : "Preparing your patient workspace..."}</Text>
         <PrimaryButton label="Refresh" onPress={refresh} />
       </ScreenView>
     );

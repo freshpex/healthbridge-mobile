@@ -6,7 +6,7 @@ import type { PatientDashboard } from "../../types/domain";
 
 const dateText = (value?: string) => value ? new Date(value).toLocaleDateString() : "Not set";
 
-export function RecordsScreen({ dashboard }: { dashboard?: PatientDashboard }) {
+export function RecordsScreen({ dashboard, loading }: { dashboard?: PatientDashboard; loading?: boolean }) {
   const records = dashboard?.records ?? [];
   const labs = dashboard?.labResults ?? [];
   const prescriptions = dashboard?.prescriptions ?? [];
@@ -31,7 +31,7 @@ export function RecordsScreen({ dashboard }: { dashboard?: PatientDashboard }) {
           </View>
         ))}
       </ScrollView>
-      {!dashboard ? <Text selectable>Loading records...</Text> : null}
+      {!dashboard ? <Text selectable>{loading ? "Loading records..." : "Preparing records..."}</Text> : null}
       {dashboard && records.length === 0 && labs.length === 0 ? <Text selectable style={{ color: colors.muted }}>No medical records have synced yet.</Text> : null}
       {records.map((record) => (
         <View key={record.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, padding: 12, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: record.critical ? "#FFDCA1" : colors.line, boxShadow: shadow }}>

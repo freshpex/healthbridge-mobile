@@ -1,11 +1,11 @@
 import type { Role, Screen } from "../types/domain";
 
-export const homeForRole: Record<Role, Screen> = {
+export const homeForRole: Record<Role | "super_admin", Screen> = {
   patient: "patient",
   doctor: "doctor",
   hospital_admin: "hospital",
   super_admin: "admin",
-  emergency_staff: "emergency",
+  emergency_staff: "emergency-dashboard",
   laboratory: "laboratory"
 };
 

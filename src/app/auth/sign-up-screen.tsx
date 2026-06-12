@@ -7,21 +7,25 @@ import { colors } from "../../constants/theme";
 import { healthbridgeApi, type AuthSession } from "../../services/healthbridge-api";
 import type { Hospital, Role } from "../../types/domain";
 
-const roleLabels: Record<Role, string> = {
+type SignupRole = Exclude<Role, "super_admin">;
+
+const roleLabels: Record<SignupRole, string> = {
   patient: "Patient",
   doctor: "Doctor",
   hospital_admin: "Hospital admin",
   laboratory: "Laboratory",
-  emergency_staff: "Emergency staff",
+  emergency_staff: "Emergency staff"
 };
 
-const roleDescriptions: Record<Role, string> = {
+const roleDescriptions: Record<SignupRole, string> = {
   patient: "Create a personal record account and connect securely with approved hospitals.",
   doctor: "Register as a clinician to access patient charts, review lab results, and coordinate care.",
   hospital_admin: "Join as a hospital admin to manage approvals, clinician access, and patient connections.",
   laboratory: "Register your lab to receive test requests and submit diagnostics.",
-  emergency_staff: "Sign up as emergency staff to access urgent patient information and coordinate care.",
+  emergency_staff: "Sign up as emergency staff to access urgent patient information and coordinate care."
 };
+
+const isSignupRole = (role: Role): role is SignupRole => role !== "super_admin";
 
 export function SignUpScreen({
   hospitals,
@@ -40,7 +44,7 @@ export function SignUpScreen({
   onSwitchToSignin: () => void;
   onBack?: () => void;
 }) {
-  const [role, setRole] = useState<Role>(selectedRole);
+  const [role, setRole] = useState<SignupRole>(isSignupRole(selectedRole) ? selectedRole : "patient");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +53,7 @@ export function SignUpScreen({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (selectedRole) {
+    if (isSignupRole(selectedRole)) {
       setRole(selectedRole);
       onRoleChange?.(selectedRole);
     }

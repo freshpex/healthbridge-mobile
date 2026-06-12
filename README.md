@@ -22,8 +22,8 @@ npx expo-doctor --verbose
 npx expo prebuild --clean
 ```
 
-## Demo
+## Verification
 
 Use seeded credentials with password `Password123!`.
 
-Emergency code: `HB-DEMO01`.
+Emergency code: `HB-PRIMARY01`.

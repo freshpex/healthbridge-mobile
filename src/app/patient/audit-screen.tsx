@@ -5,10 +5,10 @@ import { colors } from "../../constants/theme";
 
 const dateText = (value?: string) => value ? new Date(value).toLocaleString() : "Not set";
 
-export function AuditScreen({ dashboard }: { dashboard?: PatientDashboard }) {
+export function AuditScreen({ dashboard, loading }: { dashboard?: PatientDashboard; loading?: boolean }) {
   return (
     <ScreenView title="Audit history" subtitle="Review who accessed, shared, or changed your medical data.">
-      {!dashboard ? <Text selectable>Loading audit history...</Text> : null}
+      {!dashboard ? <Text selectable>{loading ? "Loading audit history..." : "Preparing audit history..."}</Text> : null}
       {dashboard && dashboard.auditLogs.length === 0 ? <Text selectable style={{ color: colors.muted }}>No audit events have been recorded yet.</Text> : null}
       {dashboard?.auditLogs.map((log) => (
         <View key={log.id ?? log._id} style={{ gap: 8, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: log.emergency ? "#FFDCA1" : colors.line }}>

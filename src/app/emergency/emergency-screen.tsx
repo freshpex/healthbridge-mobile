@@ -4,14 +4,14 @@ import { PrimaryButton } from "../../components/buttons/primary-button";
 import { InfoCard } from "../../components/cards/info-card";
 import { ScreenView } from "../../components/layout/screen";
 import { healthbridgeApi } from "../../services/healthbridge-api";
-import type { PatientDashboard } from "../../types/domain";
+import type { PatientDashboard, Screen } from "../../types/domain";
 import { colors } from "../../constants/theme";
 
 type EmergencyResult = Awaited<ReturnType<typeof healthbridgeApi.resolveEmergency>>;
 const contactText = (contact: EmergencyResult["emergencyContact"]) =>
   typeof contact === "string" ? contact : [contact?.name, contact?.relationship, contact?.phone].filter(Boolean).join(", ");
 
-export function EmergencyScreen({ token, dashboard, refresh }: { token?: string; dashboard?: PatientDashboard; refresh: () => Promise<void> }) {
+export function EmergencyScreen({ token, dashboard, refresh, setScreen }: { token?: string; dashboard?: PatientDashboard; refresh: () => Promise<void>; setScreen?: (screen: Screen) => void }) {
   const [code, setCode] = useState(dashboard?.profile.emergencyCode ?? "");
   const [reason, setReason] = useState("");
   const [result, setResult] = useState<EmergencyResult>();
@@ -47,6 +47,7 @@ export function EmergencyScreen({ token, dashboard, refresh }: { token?: string;
       </View>
       <TextInput value={code} onChangeText={setCode} autoCapitalize="characters" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, backgroundColor: colors.surface }} />
       <TextInput value={reason} onChangeText={setReason} multiline style={{ minHeight: 80, borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, backgroundColor: colors.surface }} />
+      {setScreen ? <PrimaryButton label="Open emergency cases" tone="light" onPress={() => setScreen("emergency-cases")} /> : null}
       <PrimaryButton label="Generate new patient code" tone="light" onPress={enable} />
       <PrimaryButton label="Resolve emergency access" onPress={resolve} />
       {error ? <Text selectable style={{ color: colors.danger }}>{error}</Text> : null}
