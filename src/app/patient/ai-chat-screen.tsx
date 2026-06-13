@@ -5,10 +5,10 @@ import { PrimaryButton } from "../../components/buttons/primary-button";
 import { colors } from "../../constants/theme";
 import { healthbridgeApi } from "../../services/healthbridge-api";
 
-export function AiChatScreen({ token, onBack }: { token?: string; onBack?: () => void }) {
+export function AiChatScreen({ token, onBack, onSymptomChecker }: { token?: string; onBack?: () => void; onSymptomChecker?: () => void }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState<{ id: string; role: string; text: string }[]>([]);
+  const [messages, setMessages] = useState<{ id: string; role: string; text: string; fallback?: boolean }[]>([]);
 
   const send = async () => {
     if (!input.trim()) return;
@@ -20,7 +20,7 @@ export function AiChatScreen({ token, onBack }: { token?: string; onBack?: () =>
       const res = await healthbridgeApi.aiChat(token, [{ role: "user", content: userMsg.text }]);
       setMessages((m) => [...m, { id: res.id, role: "assistant", text: res.reply }]);
     } catch {
-      setMessages((m) => [...m, { id: String(Date.now() + 1), role: "assistant", text: "Could not reach assistant right now." }]);
+      setMessages((m) => [...m, { id: String(Date.now() + 1), role: "assistant", text: "The HealthBridge Assistant is unavailable right now. For guided triage, please use the symptom checker instead.", fallback: true }]);
     } finally {
       setLoading(false);
     }
@@ -33,6 +33,7 @@ export function AiChatScreen({ token, onBack }: { token?: string; onBack?: () =>
           <View style={{ padding: 10, backgroundColor: item.role === "user" ? colors.surface : "#F3F7FF", borderRadius: 8, marginBottom: 8 }}>
             <Text style={{ fontWeight: "800" }}>{item.role === "user" ? "You" : "Assistant"}</Text>
             <Text style={{ color: colors.ink }}>{item.text}</Text>
+            {item.fallback && onSymptomChecker ? <PrimaryButton label="Open symptom checker" tone="light" onPress={onSymptomChecker} /> : null}
           </View>
         )} />
 

@@ -4,9 +4,10 @@ import { StatusBar } from "expo-status-bar";
 import { ScreenView } from "../../components/layout/screen";
 import { colors, shadow } from "../../constants/theme";
 import { healthbridgeApi } from "../../services/healthbridge-api";
+import type { User } from "../../types/domain";
 import * as Clipboard from "expo-clipboard";
 
-export function EmergencyCardScreen({ token, user }: { token: string; user: any }) {
+export function EmergencyCardScreen({ token, user }: { token: string; user: User }) {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [code, setCode] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -14,8 +15,9 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: any 
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    loadQRCode();
-  }, []);
+    if (user.role === "patient") void loadQRCode();
+    else { setError("Emergency cards are available only for patient accounts."); setLoading(false); }
+  }, [user.role]);
 
   const loadQRCode = async () => {
     setLoading(true);
@@ -24,7 +26,7 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: any 
       setCode(response.code);
       setQrCode(response.qrCodeUrl);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Failed to load QR code");
+      setError(caught instanceof Error ? caught.message : "We could not load your emergency card right now. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -74,7 +76,7 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: any 
         </View>
 
         {/* QR Code Card */}
-        {qrCode && (
+        {qrCode ? (
           <View style={{ gap: 14, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.line, alignItems: "center", boxShadow: shadow }}>
             <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 14 }}>Scan with Emergency App</Text>
 
@@ -94,7 +96,15 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: any 
               Save or screenshot this card. Show it to emergency responders.
             </Text>
           </View>
-        )}
+        ) : !error ? (
+          <View style={{ gap: 10, padding: 14, borderRadius: 8, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
+            <Text style={{ color: colors.ink, fontWeight: "900" }}>Emergency QR is not ready</Text>
+            <Text style={{ color: colors.muted }}>Generate an emergency code or try again to create your QR card.</Text>
+            <Pressable onPress={loadQRCode} style={{ paddingVertical: 8, alignItems: "center", borderRadius: 6, borderWidth: 1, borderColor: colors.blue }}>
+              <Text style={{ color: colors.blue, fontWeight: "900", fontSize: 12 }}>Try Again</Text>
+            </Pressable>
+          </View>
+        ) : null}
 
         {/* Emergency Code */}
         {code && (
@@ -168,7 +178,7 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: any 
           <View style={{ gap: 8 }}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: colors.line }}>
               <Text style={{ color: colors.muted, fontSize: 12, fontWeight: "600" }}>Name</Text>
-              <Text style={{ color: colors.ink, fontSize: 12, fontWeight: "900" }}>{user?.name}</Text>
+              <Text style={{ color: colors.ink, fontSize: 12, fontWeight: "900" }}>{user.name ?? "Patient"}</Text>
             </View>
 
             <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: colors.line }}>

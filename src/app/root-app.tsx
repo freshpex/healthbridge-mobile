@@ -24,11 +24,12 @@ import { AuthenticatedHeader } from "../components/layout/authenticated-header";
 import { Tabs } from "../navigation/tabs";
 import { healthbridgeApi, type AuthSession } from "../services/healthbridge-api";
 import type { Hospital, PatientDashboard, Role, Screen, User } from "../types/domain";
-import { colors } from "../constants/theme";
+import { applyThemeMode, colors } from "../constants/theme";
 import { homeForRole } from "../utilities/rbac";
 
 const accessKey = "healthbridge-mobile-access-token";
 const refreshKey = "healthbridge-mobile-refresh-token";
+const themeKey = "healthbridge-mobile-theme";
 const authScreens: Screen[] = ["onboarding", "signin", "signup", "role-select"];
 const patientLegacyScreens: Screen[] = ["patient", "patient-appointments", "records", "sharing", "emergency", "emergency-card", "emergency-cases", "symptoms", "hospital-finder", "audit", "profile"];
 const screenTitles: Partial<Record<Screen, string>> = {
@@ -99,8 +100,11 @@ export function RootApp() {
     let alive = true;
     const boot = async () => {
       try {
-        const [storedAccess, storedRefresh, nextHospitals] = await Promise.all([SecureStore.getItemAsync(accessKey), SecureStore.getItemAsync(refreshKey), healthbridgeApi.hospitals()]);
+        const [storedAccess, storedRefresh, storedTheme, nextHospitals] = await Promise.all([SecureStore.getItemAsync(accessKey), SecureStore.getItemAsync(refreshKey), SecureStore.getItemAsync(themeKey), healthbridgeApi.hospitals()]);
+        const nextDark = storedTheme === "dark";
+        applyThemeMode(nextDark ? "dark" : "light");
         if (!alive) return;
+        setDark(nextDark);
         setHospitals(nextHospitals.filter((hospital) => hospital.status === "approved"));
         if (storedAccess) {
           const nextUser = await healthbridgeApi.me(storedAccess);
@@ -151,7 +155,7 @@ export function RootApp() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background, paddingTop: insets.top, paddingBottom: insets.bottom }}>
-      {showAuthenticatedUi ? <AuthenticatedHeader title={title} dark={dark} onToggleTheme={() => setDark((value) => !value)} onNotifications={() => setScreen(user?.role === "emergency_staff" ? "emergency-notifications" : "notifications")} onLogout={() => void logout()} /> : null}
+      {showAuthenticatedUi ? <AuthenticatedHeader title={title} dark={dark} onToggleTheme={() => { const next = !dark; applyThemeMode(next ? "dark" : "light"); setDark(next); void SecureStore.setItemAsync(themeKey, next ? "dark" : "light"); }} onNotifications={() => setScreen(user?.role === "emergency_staff" ? "emergency-notifications" : "notifications")} onLogout={() => void logout()} /> : null}
       <View style={{ flex: 1 }}>
         {screen === "onboarding" ? <OnboardingScreen setScreen={setScreen} /> : null}
         {screen === "signin" ? <SignInScreen onSession={onSession} setError={setError} onSwitchToSignup={() => setScreen("role-select")} onBack={() => setScreen("onboarding")} /> : null}
@@ -160,7 +164,7 @@ export function RootApp() {
         {error ? <Text selectable style={{ color: colors.danger, paddingHorizontal: 18, paddingTop: 8 }}>{error}</Text> : null}
         {screen === "patient" ? <PatientHomeScreen dashboard={dashboard} refresh={loadDashboard} setScreen={setScreen} logout={logout} loading={dashboardLoading} /> : null}
         {screen === "patient-appointments" ? <AppointmentsScreen token={token} dashboard={dashboard} hospitals={hospitals} refresh={loadDashboard} /> : null}
-        {screen === "ai-chat" ? <AiChatScreen token={token} onBack={() => setScreen(homeForRole[user?.role ?? "patient"])} /> : null}
+        {screen === "ai-chat" ? <AiChatScreen token={token} onBack={() => setScreen(homeForRole[user?.role ?? "patient"])} onSymptomChecker={() => setScreen("symptoms")} /> : null}
         {screen === "records" ? <RecordsScreen dashboard={dashboard} loading={dashboardLoading} /> : null}
         {screen === "sharing" ? <SharingScreen token={token} dashboard={dashboard} hospitals={hospitals} refresh={loadDashboard} /> : null}
         {screen === "emergency" ? <EmergencyScreen token={token} dashboard={dashboard} refresh={loadDashboard} setScreen={setScreen} /> : null}

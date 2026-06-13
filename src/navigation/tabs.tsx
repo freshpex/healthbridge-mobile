@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from "react-native";
-import { Activity, Ambulance, Bell, Building2, CalendarDays, ClipboardList, FlaskConical, Home, MessageCircle, ShieldCheck, Stethoscope, UserRound, UsersRound } from "lucide-react-native";
+import { Activity, Ambulance, Bell, Building2, CalendarDays, ClipboardList, FlaskConical, Home, MessageCircle, ShieldCheck, Stethoscope, UserRound, UsersRound, SearchCheck } from "lucide-react-native";
 import { colors } from "../constants/theme";
 import type { Role, Screen } from "../types/domain";
 
@@ -10,7 +10,7 @@ export const roleTabs: Record<Role, TabItem[]> = {
     { screen: "patient", label: "Home", icon: Home },
     { screen: "records", label: "Records", icon: ClipboardList },
     { screen: "patient-appointments", label: "Visits", icon: CalendarDays },
-    { screen: "sharing", label: "Care", icon: MessageCircle },
+    { screen: "symptoms", label: "Symptoms", icon: SearchCheck },
     { screen: "emergency-card", label: "Emergency", icon: Ambulance },
     { screen: "profile", label: "Profile", icon: UserRound }
   ],

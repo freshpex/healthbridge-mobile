@@ -59,7 +59,7 @@ export const healthbridgeApi = {
   login: (email: string, password: string) =>
     apiClient.request<AuthSession>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }),
 
-  signup: (payload: { name: string; email: string; password: string; hospitalIds: string[]; role?: Role }) =>
+  signup: (payload: { name: string; email: string; password: string; hospitalIds?: string[]; role?: Role; hospitalId?: string; labName?: string; certificationNumber?: string; department?: string; testCapabilities?: string[] }) =>
     apiClient.request<AuthSession>("/auth/signup", { method: "POST", body: JSON.stringify(payload) }),
   
   aiChat: (token: string | undefined, messages: { role: "user" | "assistant" | "system"; content: string }[]) =>
@@ -123,11 +123,27 @@ export const healthbridgeApi = {
 
   users: (token: string) => apiClient.request<User[]>("/users", {}, token),
 
+  createHospitalPersonnel: (token: string, hospitalId: string, payload: { name: string; email: string; password: string; role: "doctor" | "hospital_admin"; phone?: string; specialty?: string; licenseNumber?: string; department?: string }) =>
+    apiClient.request<User>(`/hospitals/${hospitalId}/staff`, { method: "POST", body: JSON.stringify(payload) }, token),
+
+  updateHospitalPersonnel: (token: string, hospitalId: string, staffId: string, payload: { name?: string; phone?: string; isActive?: boolean; specialty?: string; department?: string; acceptingAppointments?: boolean }) =>
+    apiClient.request<User>(`/hospitals/${hospitalId}/staff/${staffId}`, { method: "PATCH", body: JSON.stringify(payload) }, token),
+
   getLabRequests: (token: string, patientId?: string) =>
     apiClient.request<LabRequest[]>(`/lab-results/requests${patientId ? `?patientId=${patientId}` : ""}`, {}, token),
 
-  getLabResults: (token: string, patientId?: string) =>
-    apiClient.request<LabResult[]>(`/lab-results${patientId ? `?patientId=${patientId}` : ""}`, {}, token),
+  getLabResults: (token: string, patientId?: string, filters?: { status?: LabResult["status"]; search?: string; hospitalId?: string; laboratoryId?: string; dateFrom?: string; dateTo?: string }) => {
+    const query = new URLSearchParams();
+    if (patientId) query.set("patientId", patientId);
+    if (filters?.status) query.set("status", filters.status);
+    if (filters?.search) query.set("search", filters.search);
+    if (filters?.hospitalId) query.set("hospitalId", filters.hospitalId);
+    if (filters?.laboratoryId) query.set("laboratoryId", filters.laboratoryId);
+    if (filters?.dateFrom) query.set("dateFrom", filters.dateFrom);
+    if (filters?.dateTo) query.set("dateTo", filters.dateTo);
+    const suffix = query.toString();
+    return apiClient.request<LabResult[]>(`/lab-results${suffix ? `?${suffix}` : ""}`, {}, token);
+  },
 
   updateLabRequestStatus: (token: string, requestId: string, payload: { status: LabRequest["status"]; rejectionReason?: string; clinicalNotes?: string } | LabRequest["status"], resultSummary?: string) =>
     typeof payload === "string"

@@ -1,4 +1,4 @@
-export const colors = {
+export const lightColors = {
   background: "#F4F9FE",
   surface: "#FFFFFF",
   ink: "#071F42",
@@ -17,5 +17,23 @@ export const colors = {
   warning: "#D88408",
   warningSoft: "#FFF8E1"
 };
+
+export const darkColors = {
+  ...lightColors,
+  background: "#061221",
+  surface: "#0F1F33",
+  ink: "#F6FAFF",
+  navy: "#D9EAFE",
+  muted: "#AFC1D6",
+  line: "#274059",
+  blueSoft: "#123A62",
+  dangerSoft: "#351616",
+  successSoft: "#123525",
+  warningSoft: "#352A12",
+  text: "#F6FAFF"
+};
+
+export const colors = { ...lightColors };
+export const applyThemeMode = (mode: "light" | "dark") => Object.assign(colors, mode === "dark" ? darkColors : lightColors);
 
 export const shadow = "0 14px 34px rgba(14, 65, 115, 0.12)";

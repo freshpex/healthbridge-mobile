@@ -1,4 +1,5 @@
-import { ScrollView, Text, View } from "react-native";
+import { useMemo, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ChevronLeft, SlidersHorizontal } from "lucide-react-native";
 import { colors, shadow } from "../../constants/theme";
@@ -7,10 +8,15 @@ import type { PatientDashboard } from "../../types/domain";
 const dateText = (value?: string) => value ? new Date(value).toLocaleDateString() : "Not set";
 
 export function RecordsScreen({ dashboard, loading }: { dashboard?: PatientDashboard; loading?: boolean }) {
-  const records = dashboard?.records ?? [];
-  const labs = dashboard?.labResults ?? [];
-  const prescriptions = dashboard?.prescriptions ?? [];
-  const appointments = dashboard?.appointments ?? [];
+  const [filter, setFilter] = useState("All");
+  const allRecords = dashboard?.records ?? [];
+  const allLabs = dashboard?.labResults ?? [];
+  const allPrescriptions = dashboard?.prescriptions ?? [];
+  const allAppointments = dashboard?.appointments ?? [];
+  const records = useMemo(() => allRecords.filter((record) => filter === "All" || (filter === "Imaging" ? record.type === "imaging" : filter === "Visits" ? ["visit", "diagnosis", "surgery", "emergency"].includes(record.type) : filter === "Other" ? !["imaging", "visit", "diagnosis", "surgery", "emergency"].includes(record.type) : false)), [allRecords, filter]);
+  const labs = useMemo(() => filter === "All" || filter === "Lab" ? allLabs : [], [allLabs, filter]);
+  const prescriptions = useMemo(() => filter === "All" || filter === "Other" ? allPrescriptions : [], [allPrescriptions, filter]);
+  const appointments = useMemo(() => filter === "All" || filter === "Visits" ? allAppointments : [], [allAppointments, filter]);
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 12, paddingBottom: 112 }}>
@@ -25,10 +31,10 @@ export function RecordsScreen({ dashboard, loading }: { dashboard?: PatientDashb
         </View>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 2 }}>
-        {["All", "Lab", "Imaging", "Visits", "Other"].map((item, index) => (
-          <View key={item} style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, backgroundColor: index === 0 ? colors.blue : "#EEF3F8" }}>
-            <Text style={{ color: index === 0 ? "#FFFFFF" : colors.muted, fontSize: 11, fontWeight: "900" }}>{item}</Text>
-          </View>
+        {["All", "Lab", "Imaging", "Visits", "Other"].map((item) => (
+          <Pressable key={item} onPress={() => setFilter(item)} style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, backgroundColor: filter === item ? colors.blue : "#EEF3F8" }}>
+            <Text style={{ color: filter === item ? "#FFFFFF" : colors.muted, fontSize: 11, fontWeight: "900" }}>{item}</Text>
+          </Pressable>
         ))}
       </ScrollView>
       {!dashboard ? <Text selectable>{loading ? "Loading records..." : "Preparing records..."}</Text> : null}
