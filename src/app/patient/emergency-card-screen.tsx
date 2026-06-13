@@ -21,8 +21,12 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: User
 
   const loadQRCode = async () => {
     setLoading(true);
+    setError("");
     try {
-      const response = await healthbridgeApi.getEmergencyQRCode(token);
+      const response = await healthbridgeApi.getEmergencyQRCode(token).catch(async () => {
+        await healthbridgeApi.enableEmergency(token);
+        return healthbridgeApi.getEmergencyQRCode(token);
+      });
       setCode(response.code);
       setQrCode(response.qrCodeUrl);
     } catch (caught) {
@@ -65,7 +69,7 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: User
   return (
     <ScreenView title="Emergency Card" subtitle="Share with emergency staff">
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
-        <StatusBar style="dark" />
+        <StatusBar style={colors.background === "#061221" ? "light" : "dark"} />
 
         {/* Instructions */}
         <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.dangerSoft, borderWidth: 1, borderColor: colors.danger, boxShadow: shadow }}>
@@ -139,7 +143,7 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: User
                   alignItems: "center"
                 }}
               >
-                <Text style={{ color: "white", fontWeight: "900", fontSize: 12 }}>
+              <Text style={{ color: colors.onPrimary, fontWeight: "900", fontSize: 12 }}>
                   {copied ? "✓ Copied" : "Copy Code"}
                 </Text>
               </Pressable>
@@ -197,7 +201,7 @@ export function EmergencyCardScreen({ token, user }: { token: string; user: User
         </View>
 
         {/* Print Instructions */}
-        <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: "#F9FAFB", borderWidth: 1, borderColor: colors.line }}>
+        <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
           <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 12 }}>💡 Pro Tips</Text>
           <Text style={{ color: colors.muted, fontSize: 11, fontWeight: "600", lineHeight: 18 }}>
             • Keep this card accessible in your wallet or phone case{"\n"}• Screenshot and share with emergency contacts{"\n"}• Print this card and laminate it{"\n"}• Update emergency contacts regularly

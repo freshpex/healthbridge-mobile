@@ -5,7 +5,7 @@
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.healthbridge.mobile",
@@ -38,7 +38,7 @@
       ]
     ],
     "extra": {
-      "EXPO_PUBLIC_API_URL": "process.env.EXPO_PUBLIC_API_URL",
+      "EXPO_PUBLIC_API_URL": "https://healthbridge-backend-wroj.onrender.com/api/v1",
       "eas": {
         "projectId": "c13b91ca-59cb-4c64-b50c-ae4a88c0a309"
       }

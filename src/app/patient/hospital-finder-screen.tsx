@@ -111,7 +111,7 @@ export function HospitalFinderScreen({ token }: { token: string }) {
   return (
     <ScreenView title="Hospital Finder" subtitle="Find specialized care near you">
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
-        <StatusBar style="dark" />
+        <StatusBar style={colors.background === "#061221" ? "light" : "dark"} />
 
         {/* Header Info */}
         <View style={{ gap: 8, paddingBottom: 8 }}>
@@ -122,7 +122,7 @@ export function HospitalFinderScreen({ token }: { token: string }) {
         {/* Search Form */}
         <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
           <TextInput
-            style={{ padding: 10, borderRadius: 6, borderWidth: 1, borderColor: colors.line, fontSize: 12 }}
+            style={{ padding: 10, borderRadius: 6, borderWidth: 1, borderColor: colors.line, fontSize: 12, color: colors.ink, backgroundColor: colors.field }}
             placeholder="Search by name or location..."
             value={searchQuery}
             onChangeText={setSearchQuery}

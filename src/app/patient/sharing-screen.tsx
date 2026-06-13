@@ -43,15 +43,15 @@ export function SharingScreen({ token, dashboard, hospitals, refresh }: { token?
 
   return (
     <ScreenView title="Consent sharing" subtitle="Share scoped access with another hospital or doctor and revoke it at any time.">
-      {message ? <View style={{ padding: 16, borderRadius: 12, backgroundColor: "#E9F9F2" }}><Text selectable style={{ color: "#09643D" }}>{message}</Text></View> : null}
+      {message ? <View style={{ padding: 16, borderRadius: 12, backgroundColor: colors.successSoft }}><Text selectable style={{ color: colors.successText }}>{message}</Text></View> : null}
       {!dashboard ? <Text selectable>Loading sharing settings...</Text> : null}
       {dashboard ? (
         <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
           <Text selectable style={{ fontWeight: "900", fontSize: 18 }}>Create scoped share</Text>
           {destinations.length === 0 ? <Text selectable style={{ color: colors.muted }}>No destination hospital is available.</Text> : null}
           {destinations.map((hospital) => (
-            <Pressable key={hospital.id} onPress={() => setToHospitalId(hospital.id)} style={{ padding: 12, borderRadius: 10, borderWidth: 1, borderColor: (toHospitalId || destinations[0]?.id) === hospital.id ? colors.teal : colors.line }}>
-              <Text selectable style={{ fontWeight: "800" }}>{hospital.name}</Text>
+            <Pressable key={hospital.id} onPress={() => setToHospitalId(hospital.id)} style={{ padding: 12, borderRadius: 10, borderWidth: 1, borderColor: (toHospitalId || destinations[0]?.id) === hospital.id ? colors.teal : colors.line, backgroundColor: (toHospitalId || destinations[0]?.id) === hospital.id ? colors.tealSoft : colors.surface }}>
+              <Text selectable style={{ color: colors.ink, fontWeight: "800" }}>{hospital.name}</Text>
               <Text selectable style={{ color: colors.muted }}>{hospital.city}</Text>
             </Pressable>
           ))}
@@ -59,8 +59,8 @@ export function SharingScreen({ token, dashboard, hospitals, refresh }: { token?
             {scopes.map((scope) => {
               const active = selectedScopes.includes(scope);
               return (
-                <Pressable key={scope} onPress={() => setSelectedScopes((current) => active ? current.filter((item) => item !== scope) : [...current, scope])} style={{ paddingVertical: 8, paddingHorizontal: 10, borderRadius: 999, backgroundColor: active ? colors.blue : "#E9F5FF" }}>
-                  <Text style={{ color: active ? "#FFFFFF" : colors.blue, fontWeight: "800" }}>{scope}</Text>
+                <Pressable key={scope} onPress={() => setSelectedScopes((current) => active ? current.filter((item) => item !== scope) : [...current, scope])} style={{ paddingVertical: 8, paddingHorizontal: 10, borderRadius: 999, backgroundColor: active ? colors.blue : colors.blueSoft }}>
+                  <Text style={{ color: active ? colors.onPrimary : colors.blue, fontWeight: "800" }}>{scope}</Text>
                 </Pressable>
               );
             })}

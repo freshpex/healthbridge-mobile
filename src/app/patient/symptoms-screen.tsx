@@ -18,13 +18,18 @@ interface SymptomCheckerResult {
 export function SymptomsScreen({ token, setScreen }: { token: string; setScreen: (screen: Screen) => void }) {
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [notes, setNotes] = useState("");
   const [result, setResult] = useState<SymptomCheckerResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const normalizeSymptoms = (values: string[]) =>
+    Array.from(new Set(values.flatMap((value) => value.split(",")).map((value) => value.trim()).filter(Boolean)));
+
   const addSymptom = () => {
-    if (inputValue.trim() && !symptoms.includes(inputValue.trim())) {
-      setSymptoms([...symptoms, inputValue.trim()]);
+    const nextSymptoms = normalizeSymptoms([...symptoms, inputValue]);
+    if (nextSymptoms.length !== symptoms.length) {
+      setSymptoms(nextSymptoms);
       setInputValue("");
     }
   };
@@ -34,7 +39,8 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
   };
 
   const assessSymptoms = async () => {
-    if (symptoms.length === 0) {
+    const nextSymptoms = normalizeSymptoms([...symptoms, inputValue]);
+    if (nextSymptoms.length === 0) {
       setError("Please add at least one symptom");
       return;
     }
@@ -42,7 +48,10 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
     setLoading(true);
     setError("");
     try {
-      const response = await healthbridgeApi.assessSymptoms(token, symptoms);
+      setSymptoms(nextSymptoms);
+      setInputValue("");
+      const response = await healthbridgeApi.assessSymptoms(token, nextSymptoms, notes.trim() || undefined);
+      if (!response.assessment?.urgency) throw new Error("The symptom checker returned an incomplete assessment. Please try again.");
       setResult({
         assessment: response.assessment
       });
@@ -64,7 +73,7 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
     return (
       <ScreenView title="Assessment Results" subtitle={`Urgency: ${result.assessment.urgency}`}>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
-          <StatusBar style="dark" />
+          <StatusBar style={colors.background === "#061221" ? "light" : "dark"} />
 
           {/* Urgency Card */}
           <View style={{ gap: 10, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors_variant.bg, borderWidth: 2, borderColor: colors_variant.border, boxShadow: shadow }}>
@@ -81,10 +90,10 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
           </View>
 
           {/* Possible Conditions */}
-          {result.assessment.conditions.length > 0 && (
+          {(result.assessment.conditions ?? []).length > 0 && (
             <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
               <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 14 }}>Possible Conditions</Text>
-              {result.assessment.conditions.map((condition) => (
+              {(result.assessment.conditions ?? []).map((condition) => (
                 <Text key={condition} style={{ color: colors.ink, fontSize: 12, fontWeight: "600", paddingLeft: 10 }}>
                   • {condition}
                 </Text>
@@ -93,10 +102,10 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
           )}
 
           {/* Recommendations */}
-          {result.assessment.recommendations.length > 0 && (
+          {(result.assessment.recommendations ?? []).length > 0 && (
             <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
               <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 14 }}>Recommended Next Steps</Text>
-              {result.assessment.recommendations.map((rec, idx) => (
+              {(result.assessment.recommendations ?? []).map((rec, idx) => (
                 <Text key={idx} style={{ color: colors.ink, fontSize: 12, fontWeight: "600", paddingLeft: 10 }}>
                   {idx + 1}. {rec}
                 </Text>
@@ -130,14 +139,14 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
   return (
     <ScreenView title="Symptom Checker" subtitle="Describe your symptoms to get guidance">
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
-        <StatusBar style="dark" />
+        <StatusBar style={colors.background === "#061221" ? "light" : "dark"} />
 
         {/* Symptom Input */}
         <View style={{ gap: 10, padding: 14, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
           <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 14 }}>Add Symptoms</Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <TextInput
-              style={{ flex: 1, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: colors.line, fontSize: 12 }}
+              style={{ flex: 1, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, color: colors.ink, fontSize: 12 }}
               placeholder="e.g., headache, fever..."
               value={inputValue}
               onChangeText={setInputValue}
@@ -184,9 +193,11 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
         <View style={{ gap: 8 }}>
           <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 12 }}>Additional Details (Optional)</Text>
           <TextInput
-            style={{ padding: 10, borderRadius: 6, borderWidth: 1, borderColor: colors.line, fontSize: 12, height: 80, textAlignVertical: "top" }}
+            style={{ padding: 10, borderRadius: 6, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.field, color: colors.ink, fontSize: 12, height: 80, textAlignVertical: "top" }}
             placeholder="When did symptoms start? Any other details?"
             placeholderTextColor={colors.muted}
+            value={notes}
+            onChangeText={setNotes}
             multiline
           />
         </View>
@@ -197,7 +208,7 @@ export function SymptomsScreen({ token, setScreen }: { token: string; setScreen:
         <PrimaryButton
           label={loading ? "Analyzing..." : "Analyze Symptoms"}
           onPress={assessSymptoms}
-          disabled={loading || symptoms.length === 0}
+          disabled={loading || normalizeSymptoms([...symptoms, inputValue]).length === 0}
         />
       </ScrollView>
     </ScreenView>

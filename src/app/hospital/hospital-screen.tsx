@@ -30,13 +30,13 @@ export function HospitalScreen({ token, user, logout }: { token?: string; user?:
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
-      <StatusBar style="dark" />
+      <StatusBar style={colors.background === "#061221" ? "light" : "dark"} />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, paddingTop: 12 }}>
         <View>
           <Text style={{ color: colors.ink, fontSize: 12, fontWeight: "700" }}>Welcome back,</Text>
           <Text style={{ color: colors.navy, fontSize: 24, fontWeight: "900" }}>{user?.name?.split(" ")[0] ?? "Admin"}</Text>
         </View>
-        <View style={{ width: 52, height: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#F3E5F5", borderWidth: 3, borderColor: "#FFFFFF", boxShadow: shadow }}>
+        <View style={{ width: 52, height: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: colors.purpleSoft, borderWidth: 3, borderColor: colors.surface, boxShadow: shadow }}>
           <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 18 }}>{initials(user?.name ?? "HA")}</Text>
         </View>
       </View>

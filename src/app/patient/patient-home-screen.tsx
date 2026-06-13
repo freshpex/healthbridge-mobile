@@ -27,17 +27,17 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout, loadi
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
-      <StatusBar style="dark" />
+      <StatusBar style={colors.background === "#061221" ? "light" : "dark"} />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, paddingTop: 12 }}>
         <View>
           <Text style={{ color: colors.ink, fontSize: 12, fontWeight: "700" }}>Welcome back,</Text>
           <Text style={{ color: colors.navy, fontSize: 24, fontWeight: "900" }}>{patient.fullName.split(" ")[0]}</Text>
         </View>
-        <View style={{ width: 52, height: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#DFF4F8", borderWidth: 3, borderColor: "#FFFFFF", boxShadow: shadow }}>
+        <View style={{ width: 52, height: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: colors.tealSoft, borderWidth: 3, borderColor: colors.surface, boxShadow: shadow }}>
           <Text style={{ color: colors.navy, fontWeight: "900", fontSize: 18 }}>{initials(patient.fullName)}</Text>
         </View>
       </View>
-      <Pressable onPress={() => setScreen("emergency")} style={{ gap: 10, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.dangerSoft, borderWidth: 1, borderColor: "#FFC9C2", borderLeftWidth: 4, borderLeftColor: colors.danger, boxShadow: shadow }}>
+      <Pressable onPress={() => setScreen("emergency")} style={{ gap: 10, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.dangerSoft, borderWidth: 1, borderColor: colors.danger, borderLeftWidth: 4, borderLeftColor: colors.danger, boxShadow: shadow }}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Text style={{ color: colors.ink, fontWeight: "900" }}>Emergency access</Text>
           <Text style={{ color: colors.ink, fontSize: 20, fontWeight: "900" }}>{">"}</Text>
@@ -57,7 +57,7 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout, loadi
         </View>
         {(hospitals.length ? hospitals : patient.connectedHospitalIds.map((id) => ({ id, name: id, city: "", state: "" }))).slice(0, 3).map((hospital) => (
           <View key={hospital.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: colors.line }}>
-            <View style={{ width: 30, height: 30, borderRadius: 8, backgroundColor: colors.blueSoft, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "#CBE3FF" }}>
+            <View style={{ width: 30, height: 30, borderRadius: 8, backgroundColor: colors.blueSoft, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: colors.blue }}>
               <Text style={{ color: colors.blue, fontWeight: "900" }}>+</Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -75,7 +75,7 @@ export function PatientHomeScreen({ dashboard, refresh, setScreen, logout, loadi
         </View>
         {records.map((record) => (
           <View key={record.id} style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: colors.line }}>
-            <View style={{ width: 32, height: 32, borderRadius: 999, backgroundColor: record.critical ? "#FFF6DF" : colors.blueSoft, alignItems: "center", justifyContent: "center" }}>
+            <View style={{ width: 32, height: 32, borderRadius: 999, backgroundColor: record.critical ? colors.warningSoft : colors.blueSoft, alignItems: "center", justifyContent: "center" }}>
               <Text style={{ color: record.critical ? colors.amber : colors.blue, fontWeight: "900" }}>{record.type[0].toUpperCase()}</Text>
             </View>
             <View style={{ flex: 1 }}>

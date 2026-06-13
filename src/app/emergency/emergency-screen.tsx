@@ -52,19 +52,19 @@ export function EmergencyScreen({ token, dashboard, refresh, setScreen }: { toke
 
   return (
     <ScreenView title="Emergency QR/code" subtitle="Scan or enter the emergency code. Critical information appears first and access is logged.">
-      <View style={{ minHeight: 190, alignItems: "center", justifyContent: "center", borderRadius: 12, borderWidth: 1, borderColor: "#9FD6DC", backgroundColor: "#EFFCFF" }}>
+      <View style={{ minHeight: 190, alignItems: "center", justifyContent: "center", borderRadius: 12, borderWidth: 1, borderColor: colors.tealLine, backgroundColor: colors.tealSoft }}>
         <Text selectable style={{ fontSize: 28, fontWeight: "900", color: colors.blue }}>{dashboard?.profile.emergencyCode ?? code}</Text>
         <Text selectable style={{ color: colors.muted }}>QR-ready presentation code</Text>
       </View>
       <Text style={{ color: colors.ink, fontWeight: "900" }}>Emergency code</Text>
-      <TextInput value={code} onChangeText={setCode} autoCapitalize="characters" placeholder="Enter emergency code" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, backgroundColor: colors.surface }} />
+      <TextInput value={code} onChangeText={setCode} autoCapitalize="characters" placeholder="Enter emergency code" placeholderTextColor={colors.muted} style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, backgroundColor: colors.field, color: colors.ink }} />
       <View style={{ gap: 8, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface }}>
         <Text style={{ color: colors.ink, fontWeight: "900" }}>QR scan alternative</Text>
         <Text style={{ color: colors.muted }}>Use your device camera or scanner to copy the QR value, paste it here, and HealthBridge will extract the emergency code. If camera permission is unavailable, manual entry still works.</Text>
-        <TextInput value={scanText} onChangeText={setScanText} autoCapitalize="characters" placeholder="Paste scanned QR value" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, backgroundColor: colors.surface }} />
+        <TextInput value={scanText} onChangeText={setScanText} autoCapitalize="characters" placeholder="Paste scanned QR value" placeholderTextColor={colors.muted} style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, backgroundColor: colors.field, color: colors.ink }} />
         <PrimaryButton label="Use scanned QR value" tone="light" onPress={useScannedCode} />
       </View>
-      <TextInput value={reason} onChangeText={setReason} multiline style={{ minHeight: 80, borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, backgroundColor: colors.surface }} />
+      <TextInput value={reason} onChangeText={setReason} multiline placeholder="Access reason" placeholderTextColor={colors.muted} style={{ minHeight: 80, borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, backgroundColor: colors.field, color: colors.ink }} />
       {setScreen ? <PrimaryButton label="Open emergency cases" tone="light" onPress={() => setScreen("emergency-cases")} /> : null}
       <PrimaryButton label="Generate new patient code" tone="light" onPress={enable} />
       <PrimaryButton label="Resolve emergency access" onPress={resolve} />

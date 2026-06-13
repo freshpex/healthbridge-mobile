@@ -38,20 +38,21 @@ export function SignInScreen({
   return (
     <ScreenView title="Sign in to HealthBridge" subtitle="Use your patient account to access emergency access, records, and hospital connections." onBack={onBack}>
       <ScrollView contentContainerStyle={{ gap: 18 }} showsVerticalScrollIndicator={false}>
-        <View style={{ gap: 12, padding: 16, borderRadius: 16, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE8F5" }}>
+        <View style={{ gap: 12, padding: 16, borderRadius: 16, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
           <Text style={{ fontSize: 16, fontWeight: "900", color: colors.ink }}>Welcome back</Text>
           <Text style={{ color: colors.muted, lineHeight: 22 }}>Enter your email and password to continue. If you don’t have an account yet, create one and connect with approved hospitals.</Text>
         </View>
 
         <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-          <TextInput value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" placeholder="Email" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14 }} />
+          <TextInput value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" placeholder="Email" placeholderTextColor={colors.muted} style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, color: colors.ink, backgroundColor: colors.field }} />
           <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingRight: 12, backgroundColor: colors.surface }}>
             <TextInput
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
               placeholder="Password"
-              style={{ flex: 1, padding: 14 }}
+              placeholderTextColor={colors.muted}
+              style={{ flex: 1, padding: 14, color: colors.ink }}
             />
             <Pressable onPress={() => setShowPassword((current) => !current)} hitSlop={10}>
               {showPassword ? <EyeOff color={colors.muted} size={18} /> : <Eye color={colors.muted} size={18} />}

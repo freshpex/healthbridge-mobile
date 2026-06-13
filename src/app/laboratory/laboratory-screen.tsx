@@ -88,13 +88,13 @@ export function LaboratoryScreen({
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 112 }}>
-      <StatusBar style="dark" />
+      <StatusBar style={colors.background === "#061221" ? "light" : "dark"} />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, paddingTop: 12 }}>
         <View>
           <Text style={{ color: colors.ink, fontSize: 12, fontWeight: "700" }}>Welcome back,</Text>
           <Text style={{ color: colors.navy, fontSize: 24, fontWeight: "900" }}>{user?.name?.split(" ")[0] ?? "Lab"}</Text>
         </View>
-        <View style={{ width: 52, height: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FCE4EC", borderWidth: 3, borderColor: "#FFFFFF", boxShadow: shadow }}>
+        <View style={{ width: 52, height: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: colors.purpleSoft, borderWidth: 3, borderColor: colors.surface, boxShadow: shadow }}>
           <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 18 }}>{initials(user?.name ?? "LS")}</Text>
         </View>
       </View>
@@ -106,9 +106,9 @@ export function LaboratoryScreen({
         </View>
       </View>
 
-      <View style={{ gap: 8, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: "#FBF5F0", borderWidth: 1, borderColor: "#FDCCC8" }}>
-        <Text style={{ fontWeight: "900", color: "#6D4C41", fontSize: 14 }}>Pending Approval</Text>
-        <Text style={{ color: "#6D4C41", fontSize: 13, lineHeight: 18 }}>Your laboratory registration is under review. You'll receive a confirmation email once approved.</Text>
+      <View style={{ gap: 8, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.warningSoft, borderWidth: 1, borderColor: colors.warningLine }}>
+        <Text style={{ fontWeight: "900", color: colors.amber, fontSize: 14 }}>Pending Approval</Text>
+        <Text style={{ color: colors.amber, fontSize: 13, lineHeight: 18 }}>Your laboratory registration is under review. You'll receive a confirmation email once approved.</Text>
       </View>
 
       <View style={{ gap: 12, padding: 16, borderRadius: 8, borderCurve: "continuous", backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow }}>
@@ -135,7 +135,8 @@ export function LaboratoryScreen({
           onChangeText={setResultText}
           placeholder="Enter verified result"
           multiline
-          style={{ minHeight: 80, padding: 12, borderWidth: 1, borderColor: colors.line, borderRadius: 8, backgroundColor: colors.background }}
+          placeholderTextColor={colors.muted}
+          style={{ minHeight: 80, padding: 12, borderWidth: 1, borderColor: colors.line, borderRadius: 8, backgroundColor: colors.field, color: colors.ink }}
         />
         <PrimaryButton label="Upload Test Result" onPress={uploadResult} />
       </View>

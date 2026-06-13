@@ -24,7 +24,8 @@ function Field({ label, value, onChangeText, placeholder, secureTextEntry = fals
         placeholder={placeholder ?? label}
         secureTextEntry={secureTextEntry}
         multiline={multiline}
-        style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, minHeight: multiline ? 78 : 48, backgroundColor: colors.surface }}
+        placeholderTextColor={colors.muted}
+        style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, minHeight: multiline ? 78 : 48, backgroundColor: colors.field, color: colors.ink }}
       />
     </View>
   );
@@ -158,7 +159,7 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
   return (
     <ScreenView title="Profile settings" subtitle="Update account details, critical medical profile data, security, notifications, and emergency access.">
       {!dashboard ? <Text selectable>Loading profile...</Text> : null}
-      {message ? <View style={{ padding: 14, borderRadius: 12, backgroundColor: "#E9F9F2" }}><Text selectable style={{ color: "#09643D" }}>{message}</Text></View> : null}
+      {message ? <View style={{ padding: 14, borderRadius: 12, backgroundColor: colors.successSoft }}><Text selectable style={{ color: colors.successText }}>{message}</Text></View> : null}
       {dashboard ? (
         <>
           <View style={{ gap: 10, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
@@ -169,7 +170,7 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
             <Text selectable>Emergency code: {dashboard.profile.emergencyCode ?? "Not enabled"}</Text>
           </View>
 
-          <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: colors.line }}>
+          <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
             <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Account and contact</Text>
             <Field label="Full name" value={fullName} onChangeText={setFullName} />
             <Field label="Email" value={email} onChangeText={setEmail} placeholder="patient@example.com" />
@@ -177,7 +178,7 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
             <Field label="Avatar URL" value={avatarUrl} onChangeText={setAvatarUrl} placeholder="https://example.com/avatar.png" />
           </View>
 
-          <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: colors.line }}>
+          <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
             <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Medical profile</Text>
             <Field label="Date of birth" value={dateOfBirth} onChangeText={setDateOfBirth} placeholder="YYYY-MM-DD" />
             <Field label="Gender" value={gender} onChangeText={setGender} />
@@ -188,14 +189,14 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
             <Field label="Current medications" value={medications} onChangeText={setMedications} placeholder="Medication and dosage" multiline />
           </View>
 
-          <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: colors.line }}>
+          <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
             <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Emergency contact</Text>
             <Field label="Contact name" value={emergencyName} onChangeText={setEmergencyName} />
             <Field label="Relationship" value={emergencyRelationship} onChangeText={setEmergencyRelationship} />
             <Field label="Contact phone" value={emergencyPhone} onChangeText={setEmergencyPhone} />
           </View>
 
-          <View style={{ gap: 10, padding: 16, borderRadius: 12, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: colors.line }}>
+          <View style={{ gap: 10, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
             <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Notification preferences</Text>
             <PreferenceToggle label="Email notifications" enabled={!!notificationPreferences.email} onToggle={() => togglePreference("email")} />
             <PreferenceToggle label="SMS notifications" enabled={!!notificationPreferences.sms} onToggle={() => togglePreference("sms")} />
@@ -206,7 +207,7 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
 
           <PrimaryButton label={saving ? "Saving..." : "Save profile and settings"} onPress={save} disabled={saving} />
 
-          <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: colors.line }}>
+          <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
             <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Security</Text>
             <Field label="Current password" value={currentPassword} onChangeText={setCurrentPassword} secureTextEntry />
             <Field label="New password" value={newPassword} onChangeText={setNewPassword} secureTextEntry />

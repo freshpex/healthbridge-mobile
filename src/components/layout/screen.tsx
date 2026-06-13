@@ -14,7 +14,7 @@ export function ScreenView({ title, subtitle, children, onBack }: { title: strin
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 128 + insets.bottom }}
       >
-        <StatusBar style="dark" />
+        <StatusBar style={colors.background === "#061221" ? "light" : "dark"} />
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           {onBack ? (
             <Pressable onPress={onBack} style={{ padding: 8 }}>

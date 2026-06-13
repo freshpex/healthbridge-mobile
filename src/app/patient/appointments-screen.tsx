@@ -110,7 +110,7 @@ export function AppointmentsScreen({ token, dashboard, hospitals, refresh }: { t
         {selectableHospitals.length === 0 ? <Text selectable style={{ color: colors.muted }}>Connect with a hospital before booking an appointment.</Text> : null}
         <Text style={{ color: colors.muted, fontWeight: "800" }}>Hospital</Text>
         {selectableHospitals.map((hospital) => (
-          <Pressable key={hospital.id} onPress={() => setHospitalId(hospital.id)} style={{ padding: 12, borderRadius: 10, borderWidth: 1, borderColor: hospitalId === hospital.id ? colors.blue : colors.line, backgroundColor: hospitalId === hospital.id ? colors.blueSoft : "#FFFFFF" }}>
+          <Pressable key={hospital.id} onPress={() => setHospitalId(hospital.id)} style={{ padding: 12, borderRadius: 10, borderWidth: 1, borderColor: hospitalId === hospital.id ? colors.blue : colors.line, backgroundColor: hospitalId === hospital.id ? colors.blueSoft : colors.surface }}>
             <Text selectable style={{ color: colors.ink, fontWeight: "900" }}>{hospital.name}</Text>
             <Text selectable style={{ color: colors.muted }}>{[hospital.city, hospital.state].filter(Boolean).join(", ")}</Text>
           </Pressable>
@@ -122,8 +122,8 @@ export function AppointmentsScreen({ token, dashboard, hospitals, refresh }: { t
             <Text selectable style={{ color: doctorId === doctor.id ? colors.teal : colors.ink, fontWeight: "800" }}>{doctor.name}</Text>
           </Pressable>
         ))}
-        <TextInput value={scheduledAt} onChangeText={setScheduledAt} placeholder="Preferred time: YYYY-MM-DDTHH:mm" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 12, color: colors.ink, backgroundColor: "#FBFDFF" }} />
-        <TextInput value={reason} onChangeText={setReason} placeholder="Reason for visit" multiline style={{ minHeight: 80, borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 12, color: colors.ink, backgroundColor: "#FBFDFF" }} />
+        <TextInput value={scheduledAt} onChangeText={setScheduledAt} placeholder="Preferred time: YYYY-MM-DDTHH:mm" placeholderTextColor={colors.muted} style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 12, color: colors.ink, backgroundColor: colors.field }} />
+        <TextInput value={reason} onChangeText={setReason} placeholder="Reason for visit" placeholderTextColor={colors.muted} multiline style={{ minHeight: 80, borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 12, color: colors.ink, backgroundColor: colors.field }} />
         <PrimaryButton label="Send request" onPress={createAppointment} />
       </View>
 
@@ -139,9 +139,9 @@ export function AppointmentsScreen({ token, dashboard, hospitals, refresh }: { t
                 <Text selectable style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>{appointment.reason}</Text>
                 <Text selectable style={{ color: colors.muted }}>{dateText(appointment.scheduledAt)}</Text>
               </View>
-              <Text style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999, overflow: "hidden", backgroundColor: "#F1F5F9", color: statusColor(appointment.status), fontSize: 11, fontWeight: "900" }}>{statusLabels[appointment.status] ?? appointment.status}</Text>
+              <Text style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999, overflow: "hidden", backgroundColor: colors.surfaceSoft, color: statusColor(appointment.status), fontSize: 11, fontWeight: "900" }}>{statusLabels[appointment.status] ?? appointment.status}</Text>
             </View>
-            <TextInput value={requestedTime} onChangeText={(value) => setRescheduleById((current) => ({ ...current, [id]: value }))} placeholder="New time: YYYY-MM-DDTHH:mm" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 10, color: colors.ink }} />
+            <TextInput value={requestedTime} onChangeText={(value) => setRescheduleById((current) => ({ ...current, [id]: value }))} placeholder="New time: YYYY-MM-DDTHH:mm" placeholderTextColor={colors.muted} style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 10, color: colors.ink, backgroundColor: colors.field }} />
             <View style={{ flexDirection: "row", gap: 10 }}>
               <View style={{ flex: 1 }}><PrimaryButton label="Cancel" tone="light" onPress={() => updateAppointment(appointment, { status: "cancelled" })} /></View>
               <View style={{ flex: 1 }}><PrimaryButton label="Reschedule" tone="teal" onPress={() => updateAppointment(appointment, { status: "reschedule_requested", scheduledAt: new Date(requestedTime).toISOString() })} /></View>

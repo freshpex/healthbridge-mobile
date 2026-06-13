@@ -12,7 +12,7 @@ module.exports = {
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
-    userInterfaceStyle: "light",
+    userInterfaceStyle: "automatic",
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.healthbridge.mobile",

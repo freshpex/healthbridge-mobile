@@ -2,8 +2,8 @@ import { Pressable, Text } from "react-native";
 import { colors } from "../../constants/theme";
 
 export function PrimaryButton({ label, onPress, tone = "blue", disabled = false }: { label: string; onPress: () => void; tone?: "blue" | "teal" | "light"; disabled?: boolean }) {
-  const backgroundColor = tone === "light" ? "#E9F5FF" : tone === "teal" ? colors.teal : colors.blue;
-  const color = tone === "light" ? colors.blue : "#FFFFFF";
+  const backgroundColor = tone === "light" ? colors.blueSoft : tone === "teal" ? colors.teal : colors.blue;
+  const color = tone === "light" ? colors.blue : colors.onPrimary;
   return (
     <Pressable
       accessibilityRole="button"

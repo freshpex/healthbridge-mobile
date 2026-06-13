@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, useColorScheme, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { MessageCircle } from "lucide-react-native";
@@ -83,6 +83,7 @@ export function RootApp() {
   const [error, setError] = useState("");
   const [dark, setDark] = useState(false);
   const insets = useSafeAreaInsets();
+  const systemScheme = useColorScheme();
 
   const persistSession = async (session: AuthSession) => {
     setUser(session.user);
@@ -101,7 +102,7 @@ export function RootApp() {
     const boot = async () => {
       try {
         const [storedAccess, storedRefresh, storedTheme, nextHospitals] = await Promise.all([SecureStore.getItemAsync(accessKey), SecureStore.getItemAsync(refreshKey), SecureStore.getItemAsync(themeKey), healthbridgeApi.hospitals()]);
-        const nextDark = storedTheme === "dark";
+        const nextDark = storedTheme ? storedTheme === "dark" : systemScheme === "dark";
         applyThemeMode(nextDark ? "dark" : "light");
         if (!alive) return;
         setDark(nextDark);
@@ -128,7 +129,7 @@ export function RootApp() {
     };
     void boot();
     return () => { alive = false; };
-  }, []);
+  }, [systemScheme]);
 
   const onSession = async (session: AuthSession) => {
     setError("");
@@ -176,8 +177,8 @@ export function RootApp() {
         {user?.role === "patient" && screen === "profile" ? <ProfileScreen token={token} user={user} dashboard={dashboard} refresh={loadDashboard} /> : null}
         {showAuthenticatedUi && user && !patientLegacyScreens.includes(screen) && screen !== "ai-chat" ? <RoleWorkspaceScreen token={token} user={user} screen={screen} logout={logout} /> : null}
       </View>
-      {showAiButton ? <Pressable onPress={() => setScreen("ai-chat")} style={{ position: "absolute", right: 18, bottom: insets.bottom + 94, width: 56, height: 56, borderRadius: 28, backgroundColor: colors.blue, alignItems: "center", justifyContent: "center", shadowColor: "#0A1F44", shadowOpacity: 0.18, shadowRadius: 10, shadowOffset: { width: 0, height: 8 }, elevation: 10 }}><MessageCircle color="#FFFFFF" size={24} /></Pressable> : null}
-      {showAuthenticatedUi && user ? <View style={{ position: "absolute", left: 14, right: 14, bottom: insets.bottom + 14, padding: 8, borderRadius: 24, borderCurve: "continuous", borderWidth: 1, borderColor: colors.line, backgroundColor: "rgba(255,255,255,0.96)", boxShadow: "0 18px 40px rgba(14, 65, 115, 0.18)" }}><Tabs role={user.role} current={screen} onChange={setScreen} /></View> : null}
+      {showAiButton ? <Pressable onPress={() => setScreen("ai-chat")} style={{ position: "absolute", right: 18, bottom: insets.bottom + 94, width: 56, height: 56, borderRadius: 28, backgroundColor: colors.blue, alignItems: "center", justifyContent: "center", shadowColor: dark ? "#000000" : "#0A1F44", shadowOpacity: 0.2, shadowRadius: 10, shadowOffset: { width: 0, height: 8 }, elevation: 10 }}><MessageCircle color={colors.onPrimary} size={24} /></Pressable> : null}
+      {showAuthenticatedUi && user ? <View style={{ position: "absolute", left: 14, right: 14, bottom: insets.bottom + 14, padding: 8, borderRadius: 24, borderCurve: "continuous", borderWidth: 1, borderColor: colors.line, backgroundColor: dark ? "rgba(15,31,51,0.96)" : "rgba(255,255,255,0.96)", boxShadow: dark ? "0 18px 40px rgba(0, 0, 0, 0.32)" : "0 18px 40px rgba(14, 65, 115, 0.18)" }}><Tabs role={user.role} current={screen} onChange={setScreen} /></View> : null}
     </SafeAreaView>
   );
 }

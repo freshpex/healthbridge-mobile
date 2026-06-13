@@ -103,7 +103,7 @@ export function SignUpScreen({
       subtitle={roleDescriptions[role]}
       onBack={onBack}
     >
-      <View style={{ gap: 12, padding: 16, borderRadius: 16, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE8F5" }}>
+      <View style={{ gap: 12, padding: 16, borderRadius: 16, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
         <Text style={{ color: colors.ink, fontSize: 18, fontWeight: "900" }}>Signing up as {roleLabels[role]}</Text>
         <Text style={{ color: colors.muted, lineHeight: 22 }}>{role === "laboratory" ? "Register as an independent laboratory or connect to a hospital when your lab operates inside a hospital network." : "Complete the details below and connect your account with approved hospitals to finish registration."}</Text>
       </View>
@@ -113,7 +113,8 @@ export function SignUpScreen({
           value={name}
           onChangeText={setName}
           placeholder={role === "patient" ? "Full name" : "Full name or organization name"}
-          style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14 }}
+          placeholderTextColor={colors.muted}
+          style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, color: colors.ink, backgroundColor: colors.field }}
         />
         <TextInput
           value={email}
@@ -121,7 +122,8 @@ export function SignUpScreen({
           autoCapitalize="none"
           keyboardType="email-address"
           placeholder="Email"
-          style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14 }}
+          placeholderTextColor={colors.muted}
+          style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, color: colors.ink, backgroundColor: colors.field }}
         />
         <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingRight: 12, backgroundColor: colors.surface }}>
           <TextInput
@@ -129,7 +131,8 @@ export function SignUpScreen({
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
             placeholder="Password"
-            style={{ flex: 1, padding: 14 }}
+            placeholderTextColor={colors.muted}
+            style={{ flex: 1, padding: 14, color: colors.ink }}
           />
           <Pressable onPress={() => setShowPassword((current) => !current)} hitSlop={10}>
             {showPassword ? <EyeOff color={colors.muted} size={18} /> : <Eye color={colors.muted} size={18} />}
@@ -141,11 +144,11 @@ export function SignUpScreen({
         <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
           <Text style={{ fontWeight: "900", fontSize: 16, color: colors.ink }}>Laboratory setup</Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
-            {(["standalone", "hospital"] as const).map((mode) => <Pressable key={mode} onPress={() => setLabMode(mode)} style={{ flex: 1, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: labMode === mode ? colors.teal : colors.line, backgroundColor: labMode === mode ? colors.teal + "15" : colors.surface }}><Text style={{ fontWeight: "900", color: labMode === mode ? colors.teal : colors.ink }}>{mode === "standalone" ? "Standalone lab" : "Hospital-connected"}</Text><Text style={{ color: colors.muted, fontSize: 11 }}>{mode === "standalone" ? "Independent lab; no hospital required." : "Operates under a selected hospital."}</Text></Pressable>)}
+            {(["standalone", "hospital"] as const).map((mode) => <Pressable key={mode} onPress={() => setLabMode(mode)} style={{ flex: 1, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: labMode === mode ? colors.teal : colors.line, backgroundColor: labMode === mode ? colors.tealSoft : colors.surface }}><Text style={{ fontWeight: "900", color: labMode === mode ? colors.teal : colors.ink }}>{mode === "standalone" ? "Standalone lab" : "Hospital-connected"}</Text><Text style={{ color: colors.muted, fontSize: 11 }}>{mode === "standalone" ? "Independent lab; no hospital required." : "Operates under a selected hospital."}</Text></Pressable>)}
           </View>
-          <TextInput value={certificationNumber} onChangeText={setCertificationNumber} placeholder="Certification number" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14 }} />
-          <TextInput value={department} onChangeText={setDepartment} placeholder="Department" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14 }} />
-          <TextInput value={capabilities} onChangeText={setCapabilities} placeholder="Test capabilities, comma-separated" style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14 }} />
+          <TextInput value={certificationNumber} onChangeText={setCertificationNumber} placeholder="Certification number" placeholderTextColor={colors.muted} style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, color: colors.ink, backgroundColor: colors.field }} />
+          <TextInput value={department} onChangeText={setDepartment} placeholder="Department" placeholderTextColor={colors.muted} style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, color: colors.ink, backgroundColor: colors.field }} />
+          <TextInput value={capabilities} onChangeText={setCapabilities} placeholder="Test capabilities, comma-separated" placeholderTextColor={colors.muted} style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 14, color: colors.ink, backgroundColor: colors.field }} />
         </View>
       ) : null}
 
@@ -156,7 +159,7 @@ export function SignUpScreen({
         ) : (
           hospitals.map((hospital) => {
             const checked = selectedHospitals.includes(hospital.id);
-            return <Pressable key={hospital.id} onPress={() => setSelectedHospitals((current) => role === "laboratory" ? [hospital.id] : (checked ? current.filter((id) => id !== hospital.id) : [...current, hospital.id]))} style={{ padding: 14, borderRadius: 10, borderWidth: 1, borderColor: checked ? colors.teal : colors.line, backgroundColor: checked ? colors.teal + "15" : colors.surface }}><Text style={{ fontWeight: "800" }}>{checked ? "[x] " : "[ ] "}{hospital.name}</Text><Text style={{ color: colors.muted }}>{hospital.city} | {hospital.specialties.join(", ")}</Text></Pressable>;
+            return <Pressable key={hospital.id} onPress={() => setSelectedHospitals((current) => role === "laboratory" ? [hospital.id] : (checked ? current.filter((id) => id !== hospital.id) : [...current, hospital.id]))} style={{ padding: 14, borderRadius: 10, borderWidth: 1, borderColor: checked ? colors.teal : colors.line, backgroundColor: checked ? colors.tealSoft : colors.surface }}><Text style={{ color: colors.ink, fontWeight: "800" }}>{checked ? "[x] " : "[ ] "}{hospital.name}</Text><Text style={{ color: colors.muted }}>{hospital.city} | {hospital.specialties.join(", ")}</Text></Pressable>;
           })
         )}
       </View> : null}
