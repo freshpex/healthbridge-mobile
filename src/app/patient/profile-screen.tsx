@@ -158,20 +158,20 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
 
   return (
     <ScreenView title="Profile settings" subtitle="Update account details, critical medical profile data, security, notifications, and emergency access.">
-      {!dashboard ? <Text selectable>Loading profile...</Text> : null}
+      {!dashboard ? <Text selectable style={{ color: colors.muted }}>Loading profile...</Text> : null}
       {message ? <View style={{ padding: 14, borderRadius: 12, backgroundColor: colors.successSoft }}><Text selectable style={{ color: colors.successText }}>{message}</Text></View> : null}
       {dashboard ? (
         <>
           <View style={{ gap: 10, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-            <Text selectable style={{ fontWeight: "900", fontSize: 18 }}>{dashboard.profile.fullName}</Text>
-            {avatarUrl ? <Text selectable>Avatar: {avatarUrl}</Text> : <Text selectable style={{ color: colors.muted }}>No avatar URL set</Text>}
-            <Text selectable>Hospitals: {dashboard.profile.hospitalIds?.map((hospital) => hospital.name).join(", ") || dashboard.profile.connectedHospitalIds.length}</Text>
-            <Text selectable>Emergency contact: {contactText(dashboard.profile.emergencyContact) || "Not set"}</Text>
-            <Text selectable>Emergency code: {dashboard.profile.emergencyCode ?? "Not enabled"}</Text>
+            <Text selectable style={{ color: colors.ink, fontWeight: "900", fontSize: 18 }}>{dashboard.profile.fullName}</Text>
+            {avatarUrl ? <Text selectable style={{ color: colors.muted }}>Avatar: {avatarUrl}</Text> : <Text selectable style={{ color: colors.muted }}>No avatar URL set</Text>}
+            <Text selectable style={{ color: colors.muted }}>Hospitals: {dashboard.profile.hospitalIds?.map((hospital) => hospital.name).join(", ") || dashboard.profile.connectedHospitalIds.length}</Text>
+            <Text selectable style={{ color: colors.muted }}>Emergency contact: {contactText(dashboard.profile.emergencyContact) || "Not set"}</Text>
+            <Text selectable style={{ color: colors.muted }}>Emergency code: {dashboard.profile.emergencyCode ?? "Not enabled"}</Text>
           </View>
 
           <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-            <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Account and contact</Text>
+            <Text selectable style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>Account and contact</Text>
             <Field label="Full name" value={fullName} onChangeText={setFullName} />
             <Field label="Email" value={email} onChangeText={setEmail} placeholder="patient@example.com" />
             <Field label="Phone" value={phone} onChangeText={setPhone} placeholder="+1 555 0100" />
@@ -179,7 +179,7 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
           </View>
 
           <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-            <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Medical profile</Text>
+            <Text selectable style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>Medical profile</Text>
             <Field label="Date of birth" value={dateOfBirth} onChangeText={setDateOfBirth} placeholder="YYYY-MM-DD" />
             <Field label="Gender" value={gender} onChangeText={setGender} />
             <Field label="Address" value={address} onChangeText={setAddress} multiline />
@@ -190,14 +190,14 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
           </View>
 
           <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-            <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Emergency contact</Text>
+            <Text selectable style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>Emergency contact</Text>
             <Field label="Contact name" value={emergencyName} onChangeText={setEmergencyName} />
             <Field label="Relationship" value={emergencyRelationship} onChangeText={setEmergencyRelationship} />
             <Field label="Contact phone" value={emergencyPhone} onChangeText={setEmergencyPhone} />
           </View>
 
           <View style={{ gap: 10, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-            <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Notification preferences</Text>
+            <Text selectable style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>Notification preferences</Text>
             <PreferenceToggle label="Email notifications" enabled={!!notificationPreferences.email} onToggle={() => togglePreference("email")} />
             <PreferenceToggle label="SMS notifications" enabled={!!notificationPreferences.sms} onToggle={() => togglePreference("sms")} />
             <PreferenceToggle label="Push notifications" enabled={!!notificationPreferences.push} onToggle={() => togglePreference("push")} />
@@ -208,7 +208,7 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
           <PrimaryButton label={saving ? "Saving..." : "Save profile and settings"} onPress={save} disabled={saving} />
 
           <View style={{ gap: 12, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-            <Text selectable style={{ fontWeight: "900", fontSize: 16 }}>Security</Text>
+            <Text selectable style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>Security</Text>
             <Field label="Current password" value={currentPassword} onChangeText={setCurrentPassword} secureTextEntry />
             <Field label="New password" value={newPassword} onChangeText={setNewPassword} secureTextEntry />
             <PrimaryButton label="Change password" tone="light" onPress={changePassword} disabled={!currentPassword || !newPassword} />
@@ -218,8 +218,8 @@ export function ProfileScreen({ token, user, dashboard, refresh }: { token?: str
           <PrimaryButton label="Generate emergency code" tone="light" onPress={enableEmergency} />
           {dashboard.uploads.length > 0 ? (
             <View style={{ gap: 8, padding: 16, borderRadius: 12, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
-              <Text selectable style={{ fontWeight: "900" }}>Uploaded documents</Text>
-              {dashboard.uploads.map((upload) => <Text selectable key={upload._id}>{upload.fileName} | {upload.provider} | {upload.category}</Text>)}
+              <Text selectable style={{ color: colors.ink, fontWeight: "900" }}>Uploaded documents</Text>
+              {dashboard.uploads.map((upload) => <Text selectable key={upload._id} style={{ color: colors.muted }}>{upload.fileName} | {upload.provider} | {upload.category}</Text>)}
             </View>
           ) : <Text selectable style={{ color: colors.muted }}>No personal documents uploaded yet.</Text>}
         </>

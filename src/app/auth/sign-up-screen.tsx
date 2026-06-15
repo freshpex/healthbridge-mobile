@@ -153,7 +153,7 @@ export function SignUpScreen({
       ) : null}
 
       {(role === "patient" || (role === "laboratory" && labMode === "hospital")) ? <View style={{ gap: 10 }}>
-        <Text style={{ fontWeight: "900", fontSize: 16 }}>{role === "laboratory" ? "Select connected hospital" : "Connect to approved hospitals"}</Text>
+        <Text style={{ color: colors.ink, fontWeight: "900", fontSize: 16 }}>{role === "laboratory" ? "Select connected hospital" : "Connect to approved hospitals"}</Text>
         {hospitals.length === 0 ? (
           <Text style={{ color: colors.muted }}>No approved hospitals are available yet.</Text>
         ) : (
